@@ -4,6 +4,7 @@
   "description": "MedFlix Backedn",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
     "start:dev": "nodemon index.js"
   },
   "repository": {
