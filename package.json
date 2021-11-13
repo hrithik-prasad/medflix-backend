@@ -1,0 +1,28 @@
+{
+  "name": "medflix-backend",
+  "version": "1.0.0",
+  "description": "MedFlix Backedn",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hrithikcse52/medflix-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hrithikcse52/medflix-backend/issues"
+  },
+  "homepage": "https://github.com/Hrithikcse52/medflix-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
