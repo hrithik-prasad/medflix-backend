@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
-const { PORT, MONGO_URI } = require("./config");
+const { PORT, MONGO_URI, FRONTEND_URL } = require("./config");
 const User = require("./routes/user");
 
 const app = express();
@@ -25,7 +25,7 @@ mongoose
 
 app.use(morgan("tiny"));
 app.use(express.json());
-app.use(cors());
+app.use(cors({ credentials: true, origin: FRONTEND_URL }));
 
 app.use("/user", User);
 
