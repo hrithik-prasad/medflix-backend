@@ -25,8 +25,9 @@ mongoose
 
 app.use(morgan("tiny"));
 app.use(express.json());
-app.use(cors({ credentials: true, origin: FRONTEND_URL }));
-
+// console.log("FrontEnd", FRONTEND_URL);
+// app.use(cors({ credentials: true, origin: FRONTEND_URL }));
+app.use(cors());
 app.use("/user", User);
 
 app.get("/", (req, res) => {
