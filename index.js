@@ -1,11 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
 const { PORT, MONGO_URI, FRONTEND_URL } = require("./config");
 const User = require("./routes/user");
-
 const app = express();
 
 const port = PORT || 5000;
@@ -23,10 +21,7 @@ mongoose
     console.log(error);
   });
 
-app.use(morgan("tiny"));
 app.use(express.json());
-// console.log("FrontEnd", FRONTEND_URL);
-// app.use(cors({ credentials: true, origin: FRONTEND_URL }));
 app.use(cors());
 app.use("/user", User);
 
