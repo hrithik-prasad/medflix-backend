@@ -21,7 +21,7 @@ mongoose
         console.log('unable to connect to DB');
         console.log(error);
     });
-app.use(cors({ credentials: true, origin: FRONTEND_URL }));
+app.use(cors({ credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 app.use('/user', User);
