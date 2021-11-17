@@ -27,6 +27,9 @@ mongoose
         console.log('unable to connect to DB');
         console.log(error);
     });
+
+app.use(cookieParser());
+app.use(express.json());
 app.use(
     cors({
         credentials: true,
@@ -47,9 +50,7 @@ app.use(
         },
     })
 );
-// app.use(cors());
-app.use(cookieParser());
-app.use(express.json());
+
 app.use('/user', User);
 
 app.get('/', (req, res) => {

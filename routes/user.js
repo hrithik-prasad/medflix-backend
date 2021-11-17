@@ -16,6 +16,10 @@ router.post('/create', (req, res) => {
     }
 });
 
+router.get('/check', handleJWT, (req, res) => {
+    res.send({ message: 'Hello ' });
+});
+
 router.get('/logout', handleJWT, (req, res) => {
     res.clearCookie('token')
         .status(200)
