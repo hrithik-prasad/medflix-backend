@@ -9,6 +9,8 @@ const app = express();
 
 const port = PORT || 5000;
 
+const allowedOrigins = ['http://localhost:3000', 'https://www.techbgs.live'];
+
 mongoose
     .connect(MONGO_URI, {
         useNewUrlParser: true,
@@ -21,7 +23,27 @@ mongoose
         console.log('unable to connect to DB');
         console.log(error);
     });
-app.use(cors({ credentials: true }));
+app.use(
+    cors({
+        credentials: true,
+        origin: (origin, cb) => {
+            console.log('Origin ', origin);
+            if (allowedOrigins.indexOf(origin) == -1) {
+                return cb(
+                    Error(
+                        `Can't take request from this url ${origin}`,
+                        origin,
+                        'should be among these',
+                        allowedOrigins
+                    ),
+                    false
+                );
+            }
+            return cb(null, true);
+        },
+    })
+);
+// app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use('/user', User);

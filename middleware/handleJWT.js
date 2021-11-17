@@ -3,6 +3,8 @@ const { TOKEN_KEY } = require('../config');
 
 const handleJWT = async (req, res, next) => {
     // console.log('REQ', req.cookies);
+    // const token = req.get('authorization');
+
     const token = req.cookies.token;
     if (!token) {
         return res.status(401).send({ message: 'Token Not Found' });
