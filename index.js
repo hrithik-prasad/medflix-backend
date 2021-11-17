@@ -9,7 +9,11 @@ const app = express();
 
 const port = PORT || 5000;
 
-const allowedOrigins = ['http://localhost:3000', 'https://www.techbgs.live'];
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://www.techbgs.live',
+    'https://techbgs.live',
+];
 
 mongoose
     .connect(MONGO_URI, {
