@@ -16,8 +16,27 @@ router.post('/create', (req, res) => {
     }
 });
 
-router.get('/check', handleJWT, (req, res) => {
-    res.send({ message: 'Hello ' });
+router.get('/check', handleJWT, async (req, res) => {
+    // console.log(req.cookies.session);
+    const session = req.cookies.session;
+    const decoded = jwt.verify(session, TOKEN_KEY);
+    // console.log(decoded, 'Decoded');
+    try {
+        const { data: user } = await User.find_users({ _id: decoded.user_id });
+        // console.log(user, 'User');
+        res.status(200).send({
+            full_name: user.full_name,
+            email: user.email,
+            token: user.token,
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(401).send({ message: 'Some error' });
+    }
+});
+router.get('/clear', (req, res) => {
+    console.log('called clear cookie');
+    res.clearCookie('token').send({ message: 'Cleared' });
 });
 
 router.get('/logout', handleJWT, (req, res) => {
@@ -71,7 +90,10 @@ router.post('/login', async (req, res) => {
                         expiresIn: '5h',
                     }
                 );
-                user.token = token;
+                const update_token = await User.find_user_update_token(
+                    user.id,
+                    token
+                );
 
                 return res
                     .cookie('token', token, {
@@ -80,7 +102,11 @@ router.post('/login', async (req, res) => {
                         maxAge: 1800000,
                         secure: process.env.NODE_ENV === 'production',
                     })
-                    .send(user);
+                    .send({
+                        full_name: user.full_name,
+                        email: user.email,
+                        token: user.token,
+                    });
             }
             res.send({ message: 'Password Wrong!' });
         } catch (err) {
