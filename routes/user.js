@@ -58,7 +58,10 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
+<<<<<<< HEAD
     console.log(process.env.NODE_ENV);
+=======
+>>>>>>> a4a8305c62066c54a0d4034ea5eb33963e63c697
     const { email, password } = req.body;
     if (email && password) {
         try {

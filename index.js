@@ -9,7 +9,15 @@ const app = express();
 
 const port = PORT || 5000;
 
+<<<<<<< HEAD
 const allowedOrigins = ['http://localhost:3000', 'https://techbgs.live'];
+=======
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://www.techbgs.live',
+    'https://techbgs.live',
+];
+>>>>>>> a4a8305c62066c54a0d4034ea5eb33963e63c697
 
 mongoose
     .connect(MONGO_URI, {
@@ -29,7 +37,25 @@ app.use(express.json());
 app.use(
     cors({
         credentials: true,
+<<<<<<< HEAD
         origin: FRONTEND_URL,
+=======
+        origin: (origin, cb) => {
+            console.log('Origin ', origin);
+            if (allowedOrigins.indexOf(origin) == -1) {
+                return cb(
+                    Error(
+                        `Can't take request from this url ${origin}`,
+                        origin,
+                        'should be among these',
+                        allowedOrigins
+                    ),
+                    false
+                );
+            }
+            return cb(null, true);
+        },
+>>>>>>> a4a8305c62066c54a0d4034ea5eb33963e63c697
     })
 );
 
