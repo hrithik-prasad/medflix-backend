@@ -31,7 +31,7 @@ router.get('/check', handleJWT, async (req, res) => {
         });
     } catch (err) {
         console.log(err);
-        res.status(401).send({ message: 'Some error' });
+        res.status(400).send({ message: 'Some error' });
     }
 });
 router.get('/clear', (req, res) => {
@@ -90,15 +90,15 @@ router.post('/login', async (req, res) => {
                         expiresIn: '5h',
                     }
                 );
-                const update_token = await User.find_user_update_token(
-                    user.id,
-                    token
-                );
+                await User.find_user_update_token(user.id, token);
 
                 return res
                     .cookie('token', token, {
-                        path: '/',
                         httpOnly: true,
+                        sameSite:
+                            process.env.NODE_ENV === 'production'
+                                ? 'none'
+                                : 'lax',
                         maxAge: 1800000,
                         secure: process.env.NODE_ENV === 'production',
                     })
