@@ -18,7 +18,7 @@ router.post('/create', (req, res) => {
 
 router.get('/check', handleJWT, async (req, res) => {
     // console.log(req.cookies.session);
-    const session = req.cookies.session;
+    const session = req.cookies.token;
     const decoded = jwt.verify(session, TOKEN_KEY);
     // console.log(decoded, 'Decoded');
     try {
@@ -94,12 +94,11 @@ router.post('/login', async (req, res) => {
 
                 return res
                     .cookie('token', token, {
-                        httpOnly: true,
+                        maxAge: 1800000,
                         sameSite:
                             process.env.NODE_ENV === 'production'
                                 ? 'none'
                                 : 'lax',
-                        maxAge: 1800000,
                         secure: process.env.NODE_ENV === 'production',
                     })
                     .send({
