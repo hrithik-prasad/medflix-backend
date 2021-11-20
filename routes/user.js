@@ -18,7 +18,7 @@ router.post('/create', (req, res) => {
 
 router.get('/check', handleJWT, async (req, res) => {
     // console.log(req.cookies.session);
-    const session = req.cookies.session;
+    const session = req.cookies.token;
     const decoded = jwt.verify(session, TOKEN_KEY);
     // console.log(decoded, 'Decoded');
     try {
