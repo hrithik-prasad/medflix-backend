@@ -31,7 +31,7 @@ router.get('/check', handleJWT, async (req, res) => {
         });
     } catch (err) {
         console.log(err);
-        res.status(401).send({ message: 'Some error' });
+        res.status(400).send({ message: 'Some error' });
     }
 });
 router.get('/clear', (req, res) => {
@@ -68,7 +68,7 @@ router.post('/register', async (req, res) => {
             password: encryPass,
             token,
         });
-        console.log(user);
+        // console.log(user);
         res.send({ message: 'Hello', id: user_id, token });
     } catch (err) {
         console.log(err);
@@ -90,14 +90,11 @@ router.post('/login', async (req, res) => {
                         expiresIn: '5h',
                     }
                 );
-                const update_token = await User.find_user_update_token(
-                    user.id,
-                    token
-                );
+                await User.find_user_update_token(user.id, token);
 
                 return res
                     .cookie('token', token, {
-                        maxAge: 1800000,
+                        maxAge: 5 * 60 * 60 * 1000,
                         sameSite:
                             process.env.NODE_ENV === 'production'
                                 ? 'none'

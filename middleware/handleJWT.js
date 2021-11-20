@@ -2,16 +2,15 @@ const { verify } = require('jsonwebtoken');
 const { TOKEN_KEY } = require('../config');
 
 const handleJWT = async (req, res, next) => {
-    console.log('REQ', req.cookies);
-
-    const token = req.cookies.token;
+    const token = req.cookies.token || req.cookies.session;
     if (!token) {
         return res.status(401).send({ message: 'Token Not Found' });
     }
-    console.log('Inside JWT');
+    // console.log('Inside JWT');
     try {
         const data = verify(token, TOKEN_KEY);
-        console.log('data Token', data);
+        // console.log('data Token', data.user_id);
+        req.user_id = data.user_id;
         return next();
     } catch (error) {
         console.log('Err', error);
