@@ -34,7 +34,7 @@ router.get('/all', handleJWT, async (req, res) => {
 
     try {
         const response = await patient.find_all(user_id);
-        console.log('Data', response);
+        // console.log('Data', response);
         res.status(200).send(response);
     } catch (error) {
         console.log(error);

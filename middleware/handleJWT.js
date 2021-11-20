@@ -9,7 +9,7 @@ const handleJWT = async (req, res, next) => {
     // console.log('Inside JWT');
     try {
         const data = verify(token, TOKEN_KEY);
-        console.log('data Token', data.user_id);
+        // console.log('data Token', data.user_id);
         req.user_id = data.user_id;
         return next();
     } catch (error) {

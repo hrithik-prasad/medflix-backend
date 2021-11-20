@@ -68,7 +68,7 @@ router.post('/register', async (req, res) => {
             password: encryPass,
             token,
         });
-        console.log(user);
+        // console.log(user);
         res.send({ message: 'Hello', id: user_id, token });
     } catch (err) {
         console.log(err);
