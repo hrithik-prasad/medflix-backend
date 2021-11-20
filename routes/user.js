@@ -97,9 +97,12 @@ router.post('/login', async (req, res) => {
 
                 return res
                     .cookie('token', token, {
-                        path: '/',
                         httpOnly: true,
                         maxAge: 1800000,
+                        sameSite:
+                            process.env.NODE_ENV === 'production'
+                                ? 'none'
+                                : 'lax',
                         secure: process.env.NODE_ENV === 'production',
                     })
                     .send({
