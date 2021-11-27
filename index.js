@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 const cors = require('cors');
 require('dotenv').config();
 const { PORT, MONGO_URI, FRONTEND_URL } = require('./config');

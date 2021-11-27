@@ -18,12 +18,11 @@ router.post('/create', (req, res) => {
 
 router.get('/check', handleJWT, async (req, res) => {
     // console.log(req.cookies.session);
-    const session = req.cookies.token;
-    const decoded = jwt.verify(session, TOKEN_KEY);
     // console.log(decoded, 'Decoded');
     try {
+        const session = req.cookies.session;
+        const decoded = jwt.verify(session, TOKEN_KEY);
         const { data: user } = await User.find_users({ _id: decoded.user_id });
-        // console.log(user, 'User');
         res.status(200).send({
             full_name: user.full_name,
             email: user.email,

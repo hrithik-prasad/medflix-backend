@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const patientSchema = new mongoose.Schema(
     {
@@ -15,5 +16,16 @@ const patientSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
+// UserSchema.plugin(AutoIncrement, {
+//     id: 'inhabitant_seq',
+//     inc_field: 'inhabitant_number',
+//     reference_fields: ['country', 'city'],
+// });
+
+patientSchema.plugin(AutoIncrement, {
+    id: 'pt_seq',
+    inc_field: 'pt_id',
+    reference_fields: ['pt_at'],
+});
 
 module.exports = mongoose.model('patient', patientSchema);
