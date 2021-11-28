@@ -17,12 +17,8 @@ router.post('/create', (req, res) => {
 });
 
 router.get('/check', handleJWT, async (req, res) => {
-    // console.log(req.cookies.session);
-    // console.log(decoded, 'Decoded');
     try {
-        const session = req.get('authorization');
-        const decoded = jwt.verify(session, TOKEN_KEY);
-        const { data: user } = await User.find_users({ _id: decoded.user_id });
+        const { data: user } = await User.find_users({ _id: req.user_id });
         res.status(200).send({
             full_name: user.full_name,
             email: user.email,
@@ -81,40 +77,33 @@ router.post('/login', async (req, res) => {
     if (email && password) {
         try {
             const { data: user } = await User.find_users({ email });
-            if (user && (await bcrypt.compare(password, user.password))) {
-                const token = jwt.sign(
-                    { user_id: user._id, email },
-                    TOKEN_KEY,
-                    {
-                        expiresIn: '5h',
-                    }
-                );
-                await User.find_user_update_token(user.id, token);
-
-                return (
-                    res
-                        // .cookie('token', token, {
-                        //     maxAge: 5 * 60 * 60 * 1000,
-                        //     sameSite:
-                        //         process.env.NODE_ENV === 'production'
-                        //             ? 'none'
-                        //             : 'lax',
-                        //     secure: process.env.NODE_ENV === 'production',
-                        // })
-                        .send({
-                            full_name: user.full_name,
-                            email: user.email,
-                            token: user.token,
-                        })
-                );
+            console.log(user, 'User');
+            if (!user) {
+                return res.status(401).send({
+                    message: "User Dosn't Exist",
+                });
             }
-            res.send({ message: 'Password Wrong!' });
+            const ver = await bcrypt.compare(password, user.password);
+            console.log('ver', ver);
+            if (!ver) {
+                return res.status(400).json({ message: 'PassWord is Wrong' });
+            }
+            const token = jwt.sign({ user_id: user._id, email }, TOKEN_KEY, {
+                expiresIn: '5h',
+            });
+            await User.find_user_update_token(user.id, token);
+
+            return res.send({
+                full_name: user.full_name,
+                email: user.email,
+                token: user.token,
+            });
         } catch (err) {
             console.log(err);
-            return res.send({ err: 'Error' });
+            return res.status(401).send({ err: 'Error' });
         }
     } else {
-        res.status(400).send({ message: 'Provide Credentials' });
+        res.status(401).send({ message: 'Provide Credentials' });
     }
 });
 
