@@ -20,7 +20,7 @@ router.get('/check', handleJWT, async (req, res) => {
     // console.log(req.cookies.session);
     // console.log(decoded, 'Decoded');
     try {
-        const session = req.cookies.session;
+        const session = req.get('authorization');
         const decoded = jwt.verify(session, TOKEN_KEY);
         const { data: user } = await User.find_users({ _id: decoded.user_id });
         res.status(200).send({
@@ -91,20 +91,22 @@ router.post('/login', async (req, res) => {
                 );
                 await User.find_user_update_token(user.id, token);
 
-                return res
-                    .cookie('token', token, {
-                        maxAge: 5 * 60 * 60 * 1000,
-                        sameSite:
-                            process.env.NODE_ENV === 'production'
-                                ? 'none'
-                                : 'lax',
-                        secure: process.env.NODE_ENV === 'production',
-                    })
-                    .send({
-                        full_name: user.full_name,
-                        email: user.email,
-                        token: user.token,
-                    });
+                return (
+                    res
+                        // .cookie('token', token, {
+                        //     maxAge: 5 * 60 * 60 * 1000,
+                        //     sameSite:
+                        //         process.env.NODE_ENV === 'production'
+                        //             ? 'none'
+                        //             : 'lax',
+                        //     secure: process.env.NODE_ENV === 'production',
+                        // })
+                        .send({
+                            full_name: user.full_name,
+                            email: user.email,
+                            token: user.token,
+                        })
+                );
             }
             res.send({ message: 'Password Wrong!' });
         } catch (err) {

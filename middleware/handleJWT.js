@@ -2,8 +2,10 @@ const { verify } = require('jsonwebtoken');
 const { TOKEN_KEY } = require('../config');
 
 const handleJWT = async (req, res, next) => {
-    // console.log(req.cookies);
-    const token = req.cookies.session;
+    console.log(req);
+    console.log(req.cookies);
+    // const token = req.cookies.session;
+    const token = req.get('authorization');
     if (!token) {
         return res.status(401).send({ message: 'Token Not Found' });
     }
