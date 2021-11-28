@@ -8,10 +8,18 @@ function find_users(filter, projection = '', options = {}) {
 
         User.findOne(filter, projection, options, (err, docs) => {
             if (err) {
-                reject({ code: 404, data: 'Encounter error while find!' });
+                reject({
+                    code: 404,
+                    data: undefined,
+                    message: 'Encounter error while find!',
+                });
             }
             if (!docs || docs.length == 0) {
-                resolve({ code: 206, data: 'No documents found!' });
+                resolve({
+                    code: 206,
+                    data: undefined,
+                    message: 'No documents found!',
+                });
             }
             resolve({ code: 200, data: docs });
         });
