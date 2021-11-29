@@ -4,6 +4,7 @@ const { TOKEN_KEY } = require('../config');
 const handleJWT = async (req, res, next) => {
     try {
         const token = req.get('authorization');
+        // console.log(token);
         if (!token) {
             // console.log('token not present');
             return res.status(401).send('Token not Present');
