@@ -18,11 +18,14 @@ router.post('/create', (req, res) => {
 
 router.get('/check', handleJWT, async (req, res) => {
     try {
-        const { data: user } = await User.find_users({ _id: req.user_id });
+        const response = await User.find_users({ _id: req.user_id });
+        if (response.code !== 200) {
+            return res.status(400).redirect('/login');
+        }
         res.status(200).send({
-            full_name: user.full_name,
-            email: user.email,
-            token: user.token,
+            full_name: response.data.full_name,
+            email: response.data.email,
+            token: response.data.token,
         });
     } catch (err) {
         console.log(err);
@@ -63,8 +66,11 @@ router.post('/register', async (req, res) => {
             password: encryPass,
             token,
         });
-        // console.log(user);
-        res.send({ message: 'Hello', id: user_id, token });
+
+        if (user.code !== 200) {
+            return res.status(user.code).send({ message: user.message });
+        }
+        res.send({ message: 'User Created', id: user_id });
     } catch (err) {
         console.log(err);
         res.status(400).send({ error: err?.data });

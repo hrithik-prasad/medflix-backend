@@ -4,6 +4,7 @@ function find_users(filter, projection = '', options = {}) {
     return new Promise((resolve, reject) => {
         if (!filter) {
             reject({ code: 401, data: 'Improper find query' });
+            return;
         }
 
         User.findOne(filter, projection, options, (err, docs) => {
@@ -13,6 +14,7 @@ function find_users(filter, projection = '', options = {}) {
                     data: undefined,
                     message: 'Encounter error while find!',
                 });
+                return;
             }
             if (!docs || docs.length == 0) {
                 resolve({
@@ -20,6 +22,7 @@ function find_users(filter, projection = '', options = {}) {
                     data: undefined,
                     message: 'No documents found!',
                 });
+                return;
             }
             resolve({ code: 200, data: docs });
         });
@@ -29,14 +32,25 @@ function find_user_update_token(id, token) {
     return new Promise((resolve, reject) => {
         if (!id) {
             reject({ code: 401, data: 'Improper query' });
+            return;
         }
 
         User.findByIdAndUpdate(id, { token }, (err, docs) => {
             if (err) {
-                reject({ code: 404, data: 'Encounter error while find!' });
+                reject({
+                    code: 404,
+                    data: undefined,
+                    message: 'Encounter error while find!',
+                });
+                return;
             }
             if (!docs || docs.length == 0) {
-                resolve({ code: 206, data: 'No documents found!' });
+                resolve({
+                    code: 206,
+                    data: undefined,
+                    message: 'No documents found!',
+                });
+                return;
             }
             resolve({ code: 200, data: docs });
         });
@@ -45,7 +59,12 @@ function find_user_update_token(id, token) {
 function create_user(doc) {
     return new Promise((resolve, reject) => {
         if (!doc.email || !doc.password) {
-            reject({ code: 401, data: 'Improper User Creation!' });
+            reject({
+                code: 401,
+                data: undefined,
+                message: 'Improper User Creation!',
+            });
+            return;
         }
 
         find_users({ email: doc.email })
@@ -53,7 +72,8 @@ function create_user(doc) {
                 if (result.code == 200) {
                     reject({
                         code: 500,
-                        data: 'User Already Exists! Try to login!',
+                        data: undefined,
+                        message: 'User Already Exists! Try to login!',
                         details: result,
                     });
                     return;
@@ -62,7 +82,8 @@ function create_user(doc) {
                     if (err || !item) {
                         reject({
                             code: 404,
-                            data: 'Encounter error while creating user!',
+                            data: undefined,
+                            message: 'Encounter error while creating user!',
                         });
                         return;
                     }
