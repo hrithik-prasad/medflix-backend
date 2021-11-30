@@ -13,15 +13,14 @@ router.post('/create', handleJWT, async (req, res) => {
 
     try {
         const { data: response } = await doctor.create_doc({
-            name,
+            name: 'Dr. ' + name,
             gender,
             mobile_number: mobileNumber,
             specialization,
             doc_at: user_id,
         });
-        console.log(response, 'DbCreated');
+        // console.log(response, 'DbCreated');
         res.status(200).send(response);
-        // res.status(400).send({ message: 'asdas' });
     } catch (err) {
         console.log(err);
         res.status(400).send({ message: 'cound not make pt ' });
