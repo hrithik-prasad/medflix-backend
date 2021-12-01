@@ -77,8 +77,16 @@ router.post('/register', async (req, res) => {
     }
 });
 
+const checkTokenExp = (token) => {
+    try {
+        const data = verify(token, TOKEN_KEY);
+        return true;
+    } catch (err) {
+        return false;
+    }
+};
+
 router.post('/login', async (req, res) => {
-    console.log(process.env.NODE_ENV);
     const { email, password } = req.body;
     if (email && password) {
         try {
@@ -90,19 +98,25 @@ router.post('/login', async (req, res) => {
                 });
             }
             const ver = await bcrypt.compare(password, user.password);
-            console.log('ver', ver);
+            // console.log('ver', ver);
             if (!ver) {
                 return res.status(400).json({ message: 'PassWord is Wrong' });
             }
+            console.log('Token Exp:', checkTokenExp(user.token));
             const token = jwt.sign({ user_id: user._id, email }, TOKEN_KEY, {
                 expiresIn: '5h',
             });
-            await User.find_user_update_token(user.id, token);
+
+            const response_update = await User.find_user_update_token(
+                user.id,
+                token
+            );
+            console.log('Response token', response_update);
 
             return res.send({
                 full_name: user.full_name,
                 email: user.email,
-                token: user.token,
+                token: token,
             });
         } catch (err) {
             console.log(err);
