@@ -11,7 +11,7 @@ const handleJWT = async (req, res, next) => {
         }
         // console.log('Token is present ', token);
         const data = verify(token, TOKEN_KEY);
-        console.log(data, typeof data);
+        // console.log(data, typeof data);
         req.user_id = data.user_id;
         // console.log(req);
         return next();

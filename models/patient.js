@@ -13,6 +13,10 @@ const patientSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'user',
         },
+        docId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'doctor',
+        },
     },
     { timestamps: true }
 );
