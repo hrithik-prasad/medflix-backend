@@ -17,7 +17,7 @@ function create_pt(doc) {
 }
 function find_all(filter) {
     return new Promise((resolve, reject) => {
-        patient.find({ pt_at: filter }, (err, data) => {
+        patient.find(filter, (err, data) => {
             if (err) {
                 reject({ code: 401, data: "Couldn't Find Data" });
                 return;

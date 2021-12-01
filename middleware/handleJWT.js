@@ -11,11 +11,14 @@ const handleJWT = async (req, res, next) => {
         }
         // console.log('Token is present ', token);
         const data = verify(token, TOKEN_KEY);
+        // console.log(data, typeof data);
         req.user_id = data.user_id;
+        // console.log(req);
         return next();
     } catch (error) {
         console.log('Err', error);
-        res.status(400).json({ message: 'Error' });
+        res.status(400).json({ message: 'Error', error });
+        // res.redirect('/login');
     }
 };
 
