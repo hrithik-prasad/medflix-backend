@@ -30,6 +30,22 @@ router.post('/create', handleJWT, async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    console.log(req.params.id);
+    const { id } = req.params;
+    if (!id) {
+        res.status(400).send({ message: 'Send Proper Query' });
+        return;
+    }
+    const response = await patient.find_pt(id);
+    if (response.code === 401) {
+        res.status(400).send({ message: 'Something Went Wrong!' });
+        return;
+    }
+    console.log(response.data);
+    res.status(200).send(response.data);
+});
+
 router.get('/all', handleJWT, async (req, res) => {
     const { user_id } = req;
 
