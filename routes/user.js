@@ -32,10 +32,6 @@ router.get('/check', handleJWT, async (req, res) => {
         res.status(400).send({ message: 'Some error' });
     }
 });
-router.get('/clear', (req, res) => {
-    console.log('called clear cookie');
-    res.clearCookie('token').send({ message: 'Cleared' });
-});
 
 router.get('/logout', handleJWT, (req, res) => {
     res.clearCookie('token')
