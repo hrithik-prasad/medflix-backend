@@ -47,9 +47,9 @@ router.get('/:id', async (req, res) => {
 });
 
 router.get('/all', handleJWT, async (req, res) => {
-    const { user_id } = req;
-
     try {
+        const { user_id } = req;
+        console.log('Route Called!');
         const response = await patient.find_all({ pt_at: user_id });
         // console.log('Data', response);
         res.status(200).send(response);
@@ -60,16 +60,18 @@ router.get('/all', handleJWT, async (req, res) => {
 });
 
 router.post('/all', handleJWT, async (req, res) => {
-    const { user_id } = req;
-    const { docId } = req.body;
-    if (!docId) {
-        return res.status(400).send({ message: 'Provide Doctor Id' });
-    }
-    const filter = {
-        pt_at: user_id,
-        docId,
-    };
     try {
+        console.log('called');
+        const { user_id } = req;
+        const { docId } = req.body;
+        if (!docId) {
+            return res.status(400).send({ message: 'Provide Doctor Id' });
+        }
+        const filter = {
+            pt_at: user_id,
+            docId,
+        };
+
         const resp = await patient.find_all(filter);
         // console.log('Data', res);
         res.status(200).send(resp);
