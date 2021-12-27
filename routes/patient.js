@@ -1,6 +1,5 @@
 const { handleJWT } = require('../middleware/handleJWT');
 const patient = require('../databaseQueries/patient');
-
 const router = require('express').Router();
 
 router.post('/create', handleJWT, async (req, res) => {
@@ -30,31 +29,16 @@ router.post('/create', handleJWT, async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
-    console.log(req.params.id);
-    const { id } = req.params;
-    if (!id) {
-        res.status(400).send({ message: 'Send Proper Query' });
-        return;
-    }
-    const response = await patient.find_pt(id);
-    if (response.code === 401) {
-        res.status(400).send({ message: 'Something Went Wrong!' });
-        return;
-    }
-    console.log(response.data);
-    res.status(200).send(response.data);
-});
-
 router.get('/all', handleJWT, async (req, res) => {
     try {
         const { user_id } = req;
+        console.log('User ID:', user_id);
         console.log('Route Called!');
         const response = await patient.find_all({ pt_at: user_id });
         // console.log('Data', response);
         res.status(200).send(response);
     } catch (error) {
-        console.log(error);
+        console.log('Error at get all', error);
         res.status(400).send({ message: 'something went wrong !' });
     }
 });
@@ -78,6 +62,28 @@ router.post('/all', handleJWT, async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: 'something went wrong !' });
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    console.log('Called id ', req.params.id);
+
+    try {
+        const { id } = req.params;
+        if (!id) {
+            res.status(400).send({ message: 'Send Proper Query' });
+            return;
+        }
+        const response = await patient.find_pt(id);
+        if (response.code === 401) {
+            res.status(400).send({ message: 'Something Went Wrong!' });
+            return;
+        }
+        console.log(response.data);
+        res.status(200).send(response.data);
+    } catch (err) {
+        console.log('Error on id', err);
+        res.status(400).send({ message: "Coudn't make your request", err });
     }
 });
 
