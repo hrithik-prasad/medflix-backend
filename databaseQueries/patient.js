@@ -16,13 +16,16 @@ function create_pt(doc) {
     });
 }
 function find_pt(id) {
+    console.log('findPt', id);
     return new Promise((resolve, reject) => {
         patient.findById(id, (err, data) => {
+            console.log('Pt data:', data);
             if (err) {
                 reject({ code: 401, data: "Couldn't Find Data" });
                 return;
             }
             resolve({ code: 200, data });
+
             return;
         });
     });
