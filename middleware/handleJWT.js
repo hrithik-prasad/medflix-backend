@@ -3,9 +3,9 @@ const { TOKEN_KEY } = require('../config');
 
 const handleJWT = async (req, res, next) => {
     try {
-        console.log('called handel');
+        // console.log('called handel');
         const token = req.get('authorization');
-        console.log('Token Called', token);
+        // console.log('Token Called', token);
         if (!token) {
             // console.log('token not present');
             return res.status(401).send('Token not Present');
@@ -16,7 +16,7 @@ const handleJWT = async (req, res, next) => {
             return res.status(401).send('Token not Present');
         }
         // console.log(data, typeof data);
-        console.log('JWT Data', data);
+        // console.log('JWT Data', data);
 
         req.user_id = data.user_id;
         // console.log(req);

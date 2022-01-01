@@ -38,7 +38,24 @@ function find_by_user(filter) {
     });
 }
 
+function find_doc(id) {
+    return new Promise((resolve, reject) => {
+        doctor.findById(id, (err, data) => {
+            if (err) {
+                reject({
+                    code: 401,
+                    data: null,
+                    message: 'Could Not Find the Data',
+                });
+                return;
+            }
+            resolve({ code: 200, data });
+        });
+    });
+}
+
 module.exports = {
     create_doc,
     find_by_user,
+    find_doc,
 };
