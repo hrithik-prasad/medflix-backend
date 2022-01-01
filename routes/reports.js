@@ -24,14 +24,61 @@ router.get('/getpdf/:id', async (req, res) => {
             );
             return;
         }
-        pdfMake.createPdf(presTemplate()).getBase64((data) => {
-            res.writeHead(200, {
-                'Content-Type': 'application/pdf',
-                'Content-Dispositon': 'attachment;filename="filename.pdf"',
+        const patient = await find_pt(report.data.pt_id);
+        if (patient.code !== 200) {
+            res.status(400).send(
+                patient?.data || { message: 'Finding patient went Wrong' }
+            );
+            return;
+        }
+        const doc = await find_doc(report.data.docId);
+        if (doc.code !== 200) {
+            res.status(400).send(
+                doc?.data || { message: 'finding doc went Wrong' }
+            );
+            return;
+        }
+        const org = await find_users({ _id: report.data.pt_at });
+        if (org.code !== 200) {
+            res.status(400).send(
+                org?.data || { message: 'finding user went Wrong' }
+            );
+            return;
+        }
+
+        pdfMake
+            .createPdf(
+                presTemplate({
+                    docName: doc.data.name,
+                    specialization: doc.data.specialization,
+                    detailsArray: [
+                        'Fromer Senior Resident',
+                        'Aiims, Patna',
+                        'Life Member of IMA',
+                    ],
+                    orgName: org.data.full_name,
+                    subHeader: 'ENT & Maternity Center',
+                    website: 'aakritihostpital.com',
+                    loc: 'Near Sanichara Mandir, Sandalpur Road,Kumhrar, Patna: 800006',
+                    contact: 'MobileNumber: 7070996106, 7070996103, 7070996104',
+                    ptDetails: {
+                        name: patient.data.name,
+                        ageSex: `${patient.data.age}/${patient.data.gender}`,
+                        address: patient.data.address,
+                        mobile_number: patient.data.mobile_number,
+                    },
+                    date: new Date(),
+                    advice: report.data.reportData.medAdvice,
+                })
+            )
+            .getBase64((data) => {
+                res.writeHead(200, {
+                    'Content-Type': 'application/pdf',
+                    'Content-Dispositon': 'attachment;filename="filename.pdf"',
+                });
+                const download = Buffer.from(data.toString('utf-8'), 'base64');
+                res.end(download);
             });
-            const download = Buffer.from(data.toString('utf-8'), 'base64');
-            res.end(download);
-        });
     } catch (err) {
         console.log(err);
         res.send({ message: 'error' });
