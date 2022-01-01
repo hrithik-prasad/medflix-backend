@@ -15,9 +15,25 @@ function create_pt(doc) {
         });
     });
 }
+function find_pt(id) {
+    console.log('findPt', id);
+    return new Promise((resolve, reject) => {
+        patient.findById(id, (err, data) => {
+            console.log('Pt data:', data);
+            if (err) {
+                reject({ code: 401, data: "Couldn't Find Data" });
+                return;
+            }
+            resolve({ code: 200, data });
+
+            return;
+        });
+    });
+}
+
 function find_all(filter) {
     return new Promise((resolve, reject) => {
-        patient.find({ pt_at: filter }, (err, data) => {
+        patient.find(filter, (err, data) => {
             if (err) {
                 reject({ code: 401, data: "Couldn't Find Data" });
                 return;
@@ -30,4 +46,5 @@ function find_all(filter) {
 module.exports = {
     create_pt,
     find_all,
+    find_pt,
 };
