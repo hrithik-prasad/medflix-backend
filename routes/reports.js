@@ -1,4 +1,16 @@
-const makePdf = require('../controllers/pdfController/engine/pdfEngine');
+const pdfMake = require('pdfmake/build/pdfmake.js');
+const pdfFonts = require('pdfmake/build/vfs_fonts.js');
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+pdfMake.fonts = {
+    Roboto: {
+        normal: 'Roboto-Regular.ttf',
+        bold: 'Roboto-Medium.ttf',
+        italics: 'Roboto-Italic.ttf',
+        bolditalics: 'Roboto-Italic.ttf',
+    },
+};
+
 const presTemplate = require('../controllers/pdfController/template/prescription');
 const { find_doc } = require('../databaseQueries/doctorQueries');
 const { find_pt } = require('../databaseQueries/patient');
@@ -16,6 +28,7 @@ router.get('/getpdf/:id', async (req, res) => {
     if (!id) return res.status(400).send({ message: 'query not complete' });
     try {
         // const patient = await find_pt(id);
+        console.log('ID:', id);
         const report = await findReport(id);
         console.log('Report', { report });
         if (report.code !== 200) {
@@ -69,6 +82,8 @@ router.get('/getpdf/:id', async (req, res) => {
                     },
                     date: new Date(),
                     advice: report.data.reportData.medAdvice,
+                    complaints: report.data.reportData.comp,
+                    diagnosis: report.data.reportData.diagnosis,
                 })
             )
             .getBase64((data) => {

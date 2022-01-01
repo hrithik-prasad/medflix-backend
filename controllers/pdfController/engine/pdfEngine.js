@@ -1,6 +1,6 @@
-var pdfMake = require('pdfmake/build/pdfmake.js');
-var pdfFonts = require('pdfmake/build/vfs_fonts.js');
 const presTemplate = require('../template/prescription');
+const pdfMake = require('pdfmake/build/pdfmake.js');
+const pdfFonts = require('pdfmake/build/vfs_fonts.js');
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 pdfMake.fonts = {

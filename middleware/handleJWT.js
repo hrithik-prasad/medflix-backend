@@ -23,7 +23,8 @@ const handleJWT = async (req, res, next) => {
         return next();
     } catch (error) {
         console.log('Err Token Expired', error);
-        res.status(400).json({ message: 'Error', error });
+        // res.status(400).json({ message: 'Error', error });
+        res.redirect('/login');
     }
 };
 
