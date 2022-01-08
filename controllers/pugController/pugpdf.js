@@ -87,7 +87,7 @@ router.get('/:id', async (req, res) => {
         const compiledContent = pdfCompiled({ data });
         const browser = await puppeteer.launch({
             headless: true,
-            // args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            args: ['--no-sandbox'],
         });
         const convertPage = await browser.newPage();
         await convertPage.setContent(compiledContent);
