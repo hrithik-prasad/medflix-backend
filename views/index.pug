@@ -1,0 +1,59 @@
+extends layout
+mixin medDetail(med)
+    tr
+        td= med.med
+        td= med.dose
+        td= med.for
+block content
+    div.container
+        header.container_header
+            div.title
+                h1 #{data.doc.name}
+                span.star #{data.doc.degree}
+                each spec in data.doc.specs
+                    span #{spec}
+                span.star #{data.doc.pos}
+            div.logo
+                img(src= data.org.logo )
+            div.container_detail
+                p.hosname #{data.org.name}
+                span.star #{data.org.subTitle}
+                span.italic #{data.org.punchLine}
+                span #{data.org.website}
+                span #{data.org.address}
+                span #{data.org.contact}
+                    
+        div.container_body
+            div.details1
+                span.item Name: #{data.ptData.name}
+                span.item Phone: #{data.ptData.phone}
+                span.item ID: #{data.ptData.id}
+                span.item Address: #{data.ptData.address}
+            div.details2
+                span.item Date: #{data.ptData.date}
+                span.item Visit No: 1
+        div.container_body
+            div.details1
+                span.item BP: #{data.ptData.bp}   Weight: #{data.ptData.weight}
+                span.item Complaints #{data.ptComplaints.complaints}
+                span.item O/E: #{data.ptComplaints.oE}
+                span.item Tests Prescribed: #{data.ptComplaints.testPrescibed}
+                span.item #{data.ptComplaints.OtherFindings}
+
+                
+        div.container__description
+            table
+                    tr
+                        th Medicine
+                        th Dosage
+                        th Timing-Freq-Duration 
+
+                    each med in data.meds
+                        +medDetail(med)
+
+        div.container_footer
+            div.details1
+                span.item #{data.doc.name}
+                span.item #{data.doc.degree}
+                
+
