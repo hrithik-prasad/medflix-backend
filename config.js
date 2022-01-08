@@ -5,4 +5,5 @@ module.exports = {
     MONGO_URI,
     FRONTEND_URL,
     TOKEN_KEY,
+    ROOT: __dirname,
 };
