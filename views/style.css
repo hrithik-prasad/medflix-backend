@@ -1,0 +1,133 @@
+.container {
+    margin: 0 auto;
+    /* max-width: 756px; */
+
+    /* height: 800px; */
+    /* border: 1px solid #f3f3f3; */
+    padding: 16px;
+}
+.star {
+    font-size: 12px;
+    font-weight: bold;
+}
+.title span {
+    margin: 2px;
+    width: 200px;
+}
+.italic {
+    font-style: italic;
+}
+
+.title {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.container_header {
+    /* background: #888; */
+    border-bottom: #888 solid 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* padding: 1rem; */
+    /* height: 155px; */
+    max-height: 150px;
+}
+.container__header {
+    background: #888;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* padding: 1rem; */
+}
+.logo {
+    flex: 1;
+}
+.container_detail span {
+    margin: 2px;
+    width: 200px;
+}
+.hosname {
+    font-size: 20px;
+    font-weight: bold;
+    /* margin: auto; */
+    margin-block-end: 0;
+}
+.container_detail {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: end;
+    text-align: right;
+    justify-content: space-between;
+}
+
+.container_body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 1rem;
+    /* padding: 1.5rem; */
+}
+.item {
+    margin: 2px;
+}
+
+.details1,
+.details2 {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+}
+
+.container__customerdetails {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+.container__customerdetails > div {
+    margin: 0 1rem;
+}
+
+.container__invoicetotal > h3 {
+    text-align: right;
+}
+.container__invoicetotal > p {
+    color: #00b7ff;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+}
+
+.container__description {
+    /* margin-top: 2rem; */
+    width: 100%;
+    padding: 1rem;
+}
+
+.container__description table {
+    border-collapse: collapse;
+    width: 100%;
+}
+.container__description th {
+    text-align: start;
+    color: #00b7ff;
+}
+
+.container__description td,
+.container__description th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 1rem;
+}
+
+.container_footer {
+    margin-top: 7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    padding: 1rem;
+}
