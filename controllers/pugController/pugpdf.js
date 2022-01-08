@@ -2,66 +2,29 @@ const router = require('express').Router();
 const pug = require('pug');
 const pdf = require('html-pdf');
 const path = require('path');
+const puppeteer = require('puppeteer');
 const { ROOT } = require('../../config');
-// const mongoose = require('mongoose');
-// var Grid = require('gridfs-stream');
-// const fs = require('fs');
-// const upload = require('../../middleware/multerGrid');
 
-// const conn = mongoose.connection;
-// let bucket;
+// router.get('/pdf', (req, res, next) => {
+//     const pdfCompiled = pug.compileFile(path.join(ROOT, 'views/index.pug'));
+//     const compiledContent = pdfCompiled({ data });
+//     console.log('compiled', compiledContent);
+//     const filepath = path.join(ROOT, `public/pdfs/hello.pdf`);
+//     pdf.create(compiledContent).toFile(filepath, (err, res) => {
+//         if (err) {
+//             console.log(err);
+//         } else {
+//             console.log(res);
+//         }
+//     });
 
-// const datapath = path.join(__dirname, '/pdfs/hello.pdf');
-// conn.once('open', () => {
-//     console.log('connections is opened ');
-//     console.log(conn.db + 'wahab this is running');
-//     bucket = Grid(conn.db, mongoose.mongo);
+//     res.json({ message: 'Wpr' });
 // });
 
-// function savePdf() {
-//     const id = new mongoose.mongo.ObjectId();
-//     let options = {
-//         _id: id,
-//         filename: 'hello.pdf',
-//         mode: 'w',
-//         chunkSize: 1024,
-//         root: 'my_collection',
-//     };
-//     var filestream = bucket.createWriteStream(options);
-//     fs.createReadStream(datapath).pipe(filestream);
-//     filestream.on('close', (file) => {
-//         console.log(file.filename + ' Write to DB');
-//     });
-// }
-
-router.get('/pdf', (req, res, next) => {
-    const payload = {
-        items: [
-            {
-                name: 'paste',
-                cost: 40,
-                quantity: 1,
-                amount: 40,
-            },
-        ],
-        customerDetails: {
-            name: 'Muthu',
-            area: '8/91, main street',
-            city: 'chennai',
-            state: 'https://aakritihospital.netlify.app/static/media/logo.e50a3e57.jpeg',
-            country: 'India',
-            logo: 'https://aakritihospital.netlify.app/static/media/logo.e50a3e57.jpeg',
-        },
-        invoiceNumber: 12332523,
-        dateofissue: '12/10/2020',
-        invoiceTotal: 47.2,
-        tax: 7.2,
-        subtotal: 40,
-        amountDue: 47.2,
-    };
+router.get('/downloadpdf', async (req, res) => {
     const data = {
         doc: {
-            docName: 'Dr Archana Singh ',
+            name: 'Dr Archana Singh ',
             degree: 'MBBS (HONS), MS obs & gynae',
             specs: [
                 'Ex obs& gynae Registrar of vivekananad institure of medical sciecne(vims)',
@@ -86,6 +49,7 @@ router.get('/pdf', (req, res, next) => {
             address: 'Patna',
             bp: '15',
             weight: '45',
+            date: '2022/01/08',
         },
         ptComplaints: {
             complaints: 'Headache',
@@ -100,20 +64,26 @@ router.get('/pdf', (req, res, next) => {
             { name: 'Tab. Odimont lc', dosage: '1-0-0', duration: '10days' },
         ],
     };
-
-    const pdfCompiled = pug.compileFile(path.join(ROOT, 'views/index.pug'));
-    const compiledContent = pdfCompiled({ data });
-    console.log('compiled', compiledContent);
-    const filepath = path.join(ROOT, `public/pdfs/hello.pdf`);
-    pdf.create(compiledContent).toFile(filepath, (err, res) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(res);
-        }
-    });
-
-    res.json({ message: 'Wpr' });
+    try {
+        const pdfCompiled = pug.compileFile(path.join(ROOT, 'views/index.pug'));
+        const compiledContent = pdfCompiled({ data });
+        console.log('compiled', compiledContent);
+        const browser = await puppeteer.launch({
+            headless: true,
+            // args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+        const convertPage = await browser.newPage();
+        await convertPage.setContent(compiledContent);
+        const pdfBuffer = await convertPage.pdf({
+            format: 'a4',
+            printBackground: true,
+        });
+        res.set('Content-Type', 'application/pdf');
+        res.status(201).send(Buffer.from(pdfBuffer, 'binary'));
+    } catch (err) {
+        console.log('Error on making pdf', err);
+        res.status(500).send({ message: 'Could not create pdf' });
+    }
 });
 
 router.get('/p', function (req, res) {
@@ -160,6 +130,6 @@ router.get('/p', function (req, res) {
         ],
     };
 
-    res.render('index', { title: 'Invoice', data });
+    res.render('index', { data });
 });
 module.exports = router;

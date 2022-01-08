@@ -33,6 +33,7 @@ const port = PORT || 5000;
         });
 })();
 
+// app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 app.use(express.json());
 app.use(
@@ -46,35 +47,6 @@ app.use('/user', User);
 app.use('/patient', Patient);
 app.use('/doctor', DoctorRoute);
 app.use('/reports', Reports);
-app.get('/pugtest', (req, res) => {
-    const payload = {
-        items: [
-            {
-                name: 'paste',
-                cost: 40,
-                quantity: 1,
-                amount: 40,
-            },
-        ],
-        customerDetails: {
-            name: 'Muthu',
-            area: '8/91, main street',
-            city: 'chennai',
-            state: 'Tamil nadu',
-            country: 'India',
-        },
-        invoiceNumber: 12332523,
-        dateofissue: '12/10/2020',
-        invoiceTotal: 47.2,
-        tax: 7.2,
-        subtotal: 40,
-        amountDue: 47.2,
-    };
-    res.render('index.pug', { payload });
-});
-
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/pug', pugController);
 app.get('/', (req, res) => {
     res.status(200).send({ message: 'Server Up and Running' });
