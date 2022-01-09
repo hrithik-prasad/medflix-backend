@@ -19,6 +19,7 @@ const {
     findReport,
 } = require('../databaseQueries/reportQueries');
 const { find_users } = require('../databaseQueries/user');
+const { handleJWT } = require('../middleware/handleJWT');
 
 const router = require('express').Router();
 
@@ -29,7 +30,7 @@ router.get('/getpdf/:id', async (req, res) => {
     try {
         // const patient = await find_pt(id);
         console.log('ID:', id);
-        const report = await findReport(id);
+        const report = await findReport({ _id: id });
         console.log('Report', { report });
         if (report.code !== 200) {
             res.status(400).send(
@@ -37,21 +38,21 @@ router.get('/getpdf/:id', async (req, res) => {
             );
             return;
         }
-        const patient = await find_pt(report.data.pt_id);
+        const patient = await find_pt(report.data[0].pt_id);
         if (patient.code !== 200) {
             res.status(400).send(
                 patient?.data || { message: 'Finding patient went Wrong' }
             );
             return;
         }
-        const doc = await find_doc(report.data.docId);
+        const doc = await find_doc(report.data[0].docId);
         if (doc.code !== 200) {
             res.status(400).send(
                 doc?.data || { message: 'finding doc went Wrong' }
             );
             return;
         }
-        const org = await find_users({ _id: report.data.pt_at });
+        const org = await find_users({ _id: report.data[0].pt_at });
         if (org.code !== 200) {
             res.status(400).send(
                 org?.data || { message: 'finding user went Wrong' }
@@ -81,9 +82,9 @@ router.get('/getpdf/:id', async (req, res) => {
                         mobile_number: patient.data.mobile_number,
                     },
                     date: new Date(),
-                    advice: report.data.reportData.medAdvice,
-                    complaints: report.data.reportData.comp,
-                    diagnosis: report.data.reportData.diagnosis,
+                    advice: report.data[0].reportData.medAdvice,
+                    complaints: report.data[0].reportData.comp,
+                    diagnosis: report.data[0].reportData.diagnosis,
                 })
             )
             .getBase64((data) => {
@@ -100,6 +101,21 @@ router.get('/getpdf/:id', async (req, res) => {
     }
 });
 
+router.get('/list', handleJWT, async (req, res) => {
+    try {
+        const { user_id } = req;
+        if (!user_id)
+            return res.status(400).send({ message: 'Something Went Wrong' });
+        const reports = await findReport({ pt_at: user_id });
+        const patient = await find_pt(reports.data[0].pt_id);
+        console.log('patient', patient);
+        //TODO: change db model add name basic field in all model
+        res.send(reports);
+    } catch (err) {
+        console.log('Error', err);
+        res.status(400).send({ message: 'Something Went Wrong' });
+    }
+});
 router.post('/save/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -134,7 +150,7 @@ router.post('/save/:id', async (req, res) => {
         if (report.code !== 200) {
             return res.status(401).send({ message: 'Couldnt make report' });
         }
-        res.send(report.data);
+        res.send(report.data[0]);
     } catch (err) {
         console.log('Save Pt data for report errror', err);
         res.status(500).send({ message: 'Something went wrong' });

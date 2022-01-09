@@ -1,5 +1,6 @@
 const { handleJWT } = require('../middleware/handleJWT');
 const patient = require('../databaseQueries/patient');
+const { find_doc } = require('../databaseQueries/doctorQueries');
 const router = require('express').Router();
 
 router.post('/create', handleJWT, async (req, res) => {
@@ -35,7 +36,22 @@ router.get('/all', handleJWT, async (req, res) => {
         console.log('User ID:', user_id);
         console.log('Route Called!');
         const response = await patient.find_all({ pt_at: user_id });
-        // console.log('Data', response);
+
+        // const data = await Promise.all(
+        //     response.data.map(async (pt) => {
+        //         if (pt.docId) {
+        //             const { data } = await find_doc(pt.docId);
+        //             return {
+        //                 patient: pt,
+        //                 doctorName: data.name,
+        //             };
+        //         }
+        //         return {
+        //             patient: pt,
+        //         };
+        //     })
+        // );
+        // TODO: Add doc Name in the obj
         res.status(200).send(response);
     } catch (error) {
         console.log('Error at get all', error);
@@ -58,6 +74,7 @@ router.post('/all', handleJWT, async (req, res) => {
 
         const resp = await patient.find_all(filter);
         // console.log('Data', res);
+
         res.status(200).send(resp);
     } catch (error) {
         console.log(error);

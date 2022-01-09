@@ -17,12 +17,12 @@ function createReport(doc) {
     });
 }
 
-function findReport(id) {
+function findAllReport(filter) {
     return new Promise((resolve, reject) => {
         if (!id) {
             reject({ code: 400, data: 'ID is not valid' });
         }
-        reportModel.findById(id, (err, data) => {
+        reportModel.find(id, (err, data) => {
             if (err) {
                 reject({ code: 401, data: 'Coudnt Find the report' });
                 return;
@@ -38,6 +38,35 @@ function findReport(id) {
             resolve({ code: 200, data });
             return;
         });
+    });
+}
+
+function findReport(filter) {
+    return new Promise((resolve, reject) => {
+        if (!filter) {
+            reject({ code: 400, data: 'filter is not valfilter' });
+        }
+        reportModel.find(
+            filter,
+            {},
+            { sort: { createdAt: -1 } },
+            (err, data) => {
+                if (err) {
+                    reject({ code: 401, data: 'Coudnt Find the report' });
+                    return;
+                }
+                if (!data || data.length == 0) {
+                    resolve({
+                        code: 206,
+                        data: undefined,
+                        message: 'No documents found!',
+                    });
+                    return;
+                }
+                resolve({ code: 200, data });
+                return;
+            }
+        );
     });
 }
 
