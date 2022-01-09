@@ -130,27 +130,38 @@ router.post('/save/:id', async (req, res) => {
         console.log('Patient', { patient });
         if (patient.code !== 200)
             return res.status(403).send({ message: 'patient id is invalid' });
-        const org = await find_users({ _id: patient.data.pt_at });
+        const org = await find_users({ _id: patient.data.pt_at.id });
         console.log('ORG:', { org });
         if (org.code !== 200) {
             return res.status(401).send({ message: 'pt at id  is invalid' });
         }
-        const doc = await find_doc(patient.data.docId);
+        const doc = await find_doc(patient.data.doctor.id);
         console.log('Doc', { doc });
         if (doc.code != 200)
             return res.status(401).send({ message: 'Docit is invalid' });
 
         const report = await createReport({
-            pt_id: id,
+            patient: {
+                id,
+                name: patient.data.name,
+                pt_id: patient.data.pt_id,
+            },
             reportData: { ...profileData, medAdvice },
             reportType: 'PRESCRIPTION',
-            pt_at: org.data._id,
-            docId: doc.data._id,
+            org: {
+                id: org.data._id,
+                name: org.data.name,
+            },
+            doctor: {
+                id: doc.data._id,
+                name: doc.data.name,
+            },
         });
         if (report.code !== 200) {
             return res.status(401).send({ message: 'Couldnt make report' });
         }
-        res.send(report.data[0]);
+        console.log('report', report);
+        res.send(report);
     } catch (err) {
         console.log('Save Pt data for report errror', err);
         res.status(500).send({ message: 'Something went wrong' });

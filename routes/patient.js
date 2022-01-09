@@ -4,8 +4,9 @@ const { find_doc } = require('../databaseQueries/doctorQueries');
 const router = require('express').Router();
 
 router.post('/create', handleJWT, async (req, res) => {
-    const { name, email, age, address, mobileNumber, gender, docId } = req.body;
-    const { user_id } = req;
+    const { name, email, age, address, mobileNumber, gender, docId, docName } =
+        req.body;
+    const { user_id, user_name } = req;
 
     if (!(name && email && age && address && mobileNumber && gender && docId)) {
         return res.status(400).send({ message: 'Send All Data' });
@@ -19,8 +20,11 @@ router.post('/create', handleJWT, async (req, res) => {
             address,
             gender,
             mobile_number: mobileNumber,
-            pt_at: user_id,
-            docId,
+            pt_at: { id: user_id, name: user_name },
+            doctor: {
+                id: docId,
+                name: docName,
+            },
         });
         console.log(response, 'DbCreated');
         res.status(200).send(response);
@@ -35,7 +39,7 @@ router.get('/all', handleJWT, async (req, res) => {
         const { user_id } = req;
         console.log('User ID:', user_id);
         console.log('Route Called!');
-        const response = await patient.find_all({ pt_at: user_id });
+        const response = await patient.find_all({ 'pt_at.id': user_id });
 
         // const data = await Promise.all(
         //     response.data.map(async (pt) => {
@@ -68,7 +72,7 @@ router.post('/all', handleJWT, async (req, res) => {
             return res.status(400).send({ message: 'Provide Doctor Id' });
         }
         const filter = {
-            pt_at: user_id,
+            'pt_at.id': user_id,
             docId,
         };
 

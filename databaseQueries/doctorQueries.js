@@ -24,7 +24,7 @@ function create_doc(doc) {
 function find_by_user(filter) {
     // console.log('FilterS', filter);
     return new Promise((resolve, reject) => {
-        doctor.find({ doc_at: filter }, (err, data) => {
+        doctor.find({ 'doc_at.id': filter }, (err, data) => {
             if (err) {
                 reject({
                     code: 401,

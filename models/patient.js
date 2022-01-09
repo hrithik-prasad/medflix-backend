@@ -10,26 +10,27 @@ const patientSchema = new mongoose.Schema(
         gender: { type: String, default: null },
         mobile_number: { type: Number, default: null },
         pt_at: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'user',
+            id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'user',
+            },
+            name: { type: String },
         },
-        docId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'doctor',
+        doctor: {
+            id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'doctor',
+            },
+            name: { type: String },
         },
     },
     { timestamps: true }
 );
-// UserSchema.plugin(AutoIncrement, {
-//     id: 'inhabitant_seq',
-//     inc_field: 'inhabitant_number',
-//     reference_fields: ['country', 'city'],
-// });
 
 patientSchema.plugin(AutoIncrement, {
     id: 'pt_seq',
     inc_field: 'pt_id',
-    reference_fields: ['pt_at'],
+    reference_fields: ['pt_at.id'],
 });
 
 module.exports = mongoose.model('patient', patientSchema);

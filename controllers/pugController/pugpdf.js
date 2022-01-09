@@ -70,57 +70,52 @@ router.get('/:id', async (req, res) => {
             );
             return;
         }
-        const patient = await find_pt(report.data[0].pt_id);
+        const patient = await find_pt(report.data[0].patient.id);
         if (patient.code !== 200) {
             res.status(400).send(
                 patient?.data || { message: 'Finding patient went Wrong' }
             );
             return;
         }
-        const doc = await find_doc(report.data[0].docId);
+        const doc = await find_doc(report.data[0].doctor.id);
         if (doc.code !== 200) {
             res.status(400).send(
                 doc?.data || { message: 'finding doc went Wrong' }
             );
             return;
         }
-        const org = await find_users({ _id: report.data[0].pt_at });
+        const org = await find_users({ _id: report.data[0].org.id });
         if (org.code !== 200) {
             res.status(400).send(
                 org?.data || { message: 'finding user went Wrong' }
             );
             return;
         }
-
+        const dateNow = new Date();
         const data = {
             doc: {
                 name: doc.data.name,
                 degree: doc.data.specialization,
-                specs: [
-                    'Ex obs& gynae Registrar of vivekananad institure of medical sciecne(vims)',
-                    ,
-                    'life member of ima & gdsi',
-                ],
-                pos: 'consultant gyaneocologiest, infertility speciality',
+                specs: doc.data.spec,
+                pos: doc.data.position,
             },
             org: {
-                name: org.data.full_name,
-                logo: 'https://aakritihospital.netlify.app/static/media/logo.e50a3e57.jpeg',
-                subTitle: 'ENT & Maternity Hospital',
-                punchLine: 'Reshape Your Health',
-                website: 'www.aakritihospital.com',
-                address:
-                    'Near Sanichara Mandir, Sandalpur Road, Kumhrar, Patna -6',
-                contact: 'Mobile: 7070996106, 7070996105, 7070996104',
+                name: org.data.name,
+                logo: org.data.logo,
+                subTitle: org.data.subTitle,
+                punchLine: org.data.punchLine,
+                website: org.data.website,
+                address: org.data.address,
+                contact: org.data.contact,
             },
             ptData: {
                 name: patient.data.name,
                 phone: patient.data.mobile_number,
-                id: patient.data._id ?? 1,
+                id: patient.data.pt_id ?? 1,
                 address: patient.data.address,
-                bp: '12',
-                weight: '45',
-                date: new Date(),
+                bp: report.data[0].reportData.bp,
+                weight: report.data[0].reportData.weight,
+                date: dateNow.toDateString(),
             },
             ptComplaints: {
                 complaints: report.data[0].reportData.comp,

@@ -2,14 +2,24 @@ const mongoose = require('mongoose');
 
 const reportSchmea = new mongoose.Schema(
     {
-        pt_id: { type: mongoose.Schema.Types.ObjectId, ref: 'patient' },
-        pt_at: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'user',
+        patient: {
+            id: { type: mongoose.Schema.Types.ObjectId, ref: 'patient' },
+            name: String,
+            pt_id: mongoose.Schema.Types.Number,
         },
-        docId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'doctor',
+        org: {
+            id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'user',
+            },
+            name: String,
+        },
+        doctor: {
+            id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'doctor',
+            },
+            name: String,
         },
         reportType: { type: String },
         reportData: { type: Object, default: {} },
