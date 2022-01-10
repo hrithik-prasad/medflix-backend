@@ -8,8 +8,21 @@ const doctorSchema = new mongoose.Schema(
         mobile_number: { type: Number, default: null },
         specialization: { type: String, default: 'MBBS' },
         doc_at: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'user',
+            id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'user',
+            },
+            name: {
+                type: String,
+            },
+        },
+        spec: {
+            type: mongoose.Schema.Types.Array,
+            default: [],
+        },
+        position: {
+            type: String,
+            default: '',
         },
     },
     { timestamps: true }
@@ -18,7 +31,7 @@ const doctorSchema = new mongoose.Schema(
 doctorSchema.plugin(AutoIncrement, {
     id: 'doc_seq',
     inc_field: 'doc_id',
-    reference_fields: ['doc_at'],
+    reference_fields: ['doc_at.id'],
 });
 
 module.exports = mongoose.model('doctor', doctorSchema);

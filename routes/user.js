@@ -7,15 +7,6 @@ const User = require('../databaseQueries/user');
 const { handleJWT } = require('../middleware/handleJWT');
 // const User = require("../models/user");
 
-router.post('/create', (req, res) => {
-    if (req.body.name) {
-        const name = req.body.name;
-        res.status(200).send({ user: name });
-    } else {
-        res.status(400).send({ message: 'Bad Request' });
-    }
-});
-
 router.get('/check', handleJWT, async (req, res) => {
     try {
         const response = await User.find_users({ _id: req.user_id });
@@ -23,7 +14,7 @@ router.get('/check', handleJWT, async (req, res) => {
             return res.status(400).redirect('/login');
         }
         res.status(200).send({
-            full_name: response.data.full_name,
+            name: response.data.name,
             email: response.data.email,
             token: response.data.token,
         });
@@ -40,27 +31,39 @@ router.get('/logout', handleJWT, (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-    const { first_name, last_name, email, password } = req.body;
-    const full_name = first_name + ' ' + last_name;
-    if (!(first_name && email && password)) {
-        res.status(400).send({ message: 'Send All Data' });
+    const {
+        name,
+        email,
+        password,
+        logo,
+        subTitle,
+        punchLine,
+        website,
+        address,
+        contact,
+    } = req.body;
+    if (!(name && email && password && address && logo)) {
+        return res.status(400).send({ message: 'Send All Data' });
     }
-
     const encryPass = await bcrypt.hash(password, 10);
 
     const user_id = mongoose.Types.ObjectId();
 
     try {
-        const token = jwt.sign({ user_id, email }, TOKEN_KEY, {
+        const token = jwt.sign({ user_id, email, name }, TOKEN_KEY, {
             expiresIn: '5h',
         });
         const user = await User.create_user({
-            first_name,
-            last_name,
-            full_name,
+            name,
             email: email.toLowerCase(),
             password: encryPass,
             token,
+            logo,
+            subTitle,
+            punchLine,
+            website,
+            address,
+            contact,
         });
 
         if (user.code !== 200) {
@@ -99,9 +102,13 @@ router.post('/login', async (req, res) => {
                 return res.status(400).json({ message: 'PassWord is Wrong' });
             }
             console.log('Token Exp:', checkTokenExp(user.token));
-            const token = jwt.sign({ user_id: user._id, email }, TOKEN_KEY, {
-                expiresIn: '5h',
-            });
+            const token = jwt.sign(
+                { user_id: user._id, email, name: user.name },
+                TOKEN_KEY,
+                {
+                    expiresIn: '5h',
+                }
+            );
 
             const response_update = await User.find_user_update_token(
                 user.id,
@@ -110,7 +117,7 @@ router.post('/login', async (req, res) => {
             console.log('Response token', response_update);
 
             return res.send({
-                full_name: user.full_name,
+                name: user.name,
                 email: user.email,
                 token: token,
             });

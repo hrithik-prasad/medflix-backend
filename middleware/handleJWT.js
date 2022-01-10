@@ -15,10 +15,11 @@ const handleJWT = async (req, res, next) => {
         if (!data) {
             return res.status(401).send('Token not Present');
         }
-        // console.log(data, typeof data);
+        console.log(data, typeof data);
         // console.log('JWT Data', data);
 
         req.user_id = data.user_id;
+        req.user_name = data.name;
         // console.log(req);
         return next();
     } catch (error) {
