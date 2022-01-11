@@ -16,7 +16,7 @@ function create_pt(doc) {
     });
 }
 function find_pt(id) {
-    console.log('findPt', id);
+    // console.log('findPt', id);
     return new Promise((resolve, reject) => {
         patient.findById(id, (err, data) => {
             console.log('Pt data:', data);
@@ -27,6 +27,18 @@ function find_pt(id) {
             resolve({ code: 200, data });
 
             return;
+        });
+    });
+}
+
+function findAndUpdate(id, update) {
+    return new Promise((resolve, reject) => {
+        patient.findByIdAndUpdate(id, update, { new: true }, (err, data) => {
+            if (err) {
+                reject({ code: 500, data: "Couldn't Update" });
+                return;
+            }
+            resolve({ code: 200, data });
         });
     });
 }
@@ -47,4 +59,5 @@ module.exports = {
     create_pt,
     find_all,
     find_pt,
+    findAndUpdate,
 };

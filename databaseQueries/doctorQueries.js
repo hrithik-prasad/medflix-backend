@@ -21,6 +21,18 @@ function create_doc(doc) {
     });
 }
 
+function docFindAndUpdate(id, update) {
+    return new Promise((resolve, reject) => {
+        doctor.findByIdAndUpdate(id, update, { new: true }, (err, data) => {
+            if (err) {
+                reject({ code: 500, data: "Couldn't Update" });
+                return;
+            }
+            resolve({ code: 200, data });
+        });
+    });
+}
+
 function find_by_user(filter) {
     // console.log('FilterS', filter);
     return new Promise((resolve, reject) => {
@@ -58,4 +70,5 @@ module.exports = {
     create_doc,
     find_by_user,
     find_doc,
+    docFindAndUpdate,
 };

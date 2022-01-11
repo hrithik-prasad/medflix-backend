@@ -26,7 +26,6 @@ router.post('/create', handleJWT, async (req, res) => {
                 name: docName,
             },
         });
-        console.log(response, 'DbCreated');
         res.status(200).send(response);
     } catch (err) {
         console.log(err);
@@ -37,25 +36,9 @@ router.post('/create', handleJWT, async (req, res) => {
 router.get('/all', handleJWT, async (req, res) => {
     try {
         const { user_id } = req;
-        console.log('User ID:', user_id);
-        console.log('Route Called!');
+        // console.log('User ID:', user_id);
+        // console.log('Route Called!');
         const response = await patient.find_all({ 'pt_at.id': user_id });
-
-        // const data = await Promise.all(
-        //     response.data.map(async (pt) => {
-        //         if (pt.docId) {
-        //             const { data } = await find_doc(pt.docId);
-        //             return {
-        //                 patient: pt,
-        //                 doctorName: data.name,
-        //             };
-        //         }
-        //         return {
-        //             patient: pt,
-        //         };
-        //     })
-        // );
-        // TODO: Add doc Name in the obj
         res.status(200).send(response);
     } catch (error) {
         console.log('Error at get all', error);
@@ -65,7 +48,6 @@ router.get('/all', handleJWT, async (req, res) => {
 
 router.post('/all', handleJWT, async (req, res) => {
     try {
-        console.log('called');
         const { user_id } = req;
         const { docId } = req.body;
         if (!docId) {
@@ -73,12 +55,9 @@ router.post('/all', handleJWT, async (req, res) => {
         }
         const filter = {
             'pt_at.id': user_id,
-            docId,
+            'doctor.id': docId,
         };
-
         const resp = await patient.find_all(filter);
-        // console.log('Data', res);
-
         res.status(200).send(resp);
     } catch (error) {
         console.log(error);
@@ -86,9 +65,57 @@ router.post('/all', handleJWT, async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
-    console.log('Called id ', req.params.id);
+router.put('/at/:id', handleJWT, async (req, res) => {
+    const data = req.body;
+    const { id } = req.params;
+    if (!id) {
+        res.status(400).send({ message: 'Bad Request' });
+        return;
+    }
+    console.log('update', data);
+    const returnData = {};
+    if (data.name) {
+        returnData.name = data.name;
+    }
+    if (data.email) {
+        returnData.email = data.email;
+    }
+    if (data.gender) {
+        returnData.gender = data.gender;
+    }
+    if (data.address) {
+        returnData.address = data.address;
+    }
+    if (data.age) {
+        returnData.age = data.age;
+    }
+    if (data.mobileNumber) {
+        returnData.mobile_number = data.mobileNumber;
+    }
+    if (data.docId) {
+        returnData.doctor = {};
+        returnData.doctor.id = data.docId;
+        returnData.doctor.name = data.docName;
+    }
+    try {
+        const response = await patient.findAndUpdate(id, returnData);
+        if (response.code !== 200) {
+            return res.status(500).send({
+                message: "couldn't send the data",
+                mes: response.data,
+            });
+        }
+        res.send(response.data);
+    } catch (error) {
+        console.log('Final Data', error);
+        res.status(500).send({
+            message: "couldn't send the data",
+            mes: error,
+        });
+    }
+});
 
+router.get('/at/:id', async (req, res) => {
     try {
         const { id } = req.params;
         if (!id) {
@@ -100,7 +127,7 @@ router.get('/:id', async (req, res) => {
             res.status(400).send({ message: 'Something Went Wrong!' });
             return;
         }
-        console.log(response.data);
+        // console.log(response.data);
         res.status(200).send(response.data);
     } catch (err) {
         console.log('Error on id', err);

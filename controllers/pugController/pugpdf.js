@@ -9,9 +9,7 @@ const { findReport } = require('../../databaseQueries/reportQueries');
 const { find_doc } = require('../../databaseQueries/doctorQueries');
 const { find_users } = require('../../databaseQueries/user');
 
-
 router.get('/preview/:id', async (req, res) => {
-
     try {
         // console.log('test called');
         // const testData = {

@@ -6,8 +6,6 @@ router.post('/create', handleJWT, async (req, res) => {
     const { name, specialization, mobileNumber, gender, spec, position } =
         req.body;
     const { user_id, user_name } = req;
-    console.log(req.body);
-
     if (!(name && mobileNumber && gender && spec, position)) {
         return res.status(400).send({ message: 'Send Complete Data' });
     }
@@ -22,7 +20,6 @@ router.post('/create', handleJWT, async (req, res) => {
             spec: specArray,
             position,
         });
-        // console.log(response, 'DbCreated');
         res.status(200).send(response);
     } catch (err) {
         console.log(err);
@@ -30,11 +27,49 @@ router.post('/create', handleJWT, async (req, res) => {
     }
 });
 
+router.put('/at/:id', handleJWT, async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+        return res.status(400).send({ message: 'Bad Request' });
+    }
+    const data = req.body;
+    const returnData = {};
+    if (data.name) {
+        returnData.name = 'Dr. ' + data.name;
+    }
+    if (data.gender) {
+        returnData.gender = data.gender;
+    }
+    if (data.spec) {
+        returnData.spec = data.spec.split(',');
+    }
+    if (data.position) {
+        returnData.position = data.position;
+    }
+    if (data.mobileNumber) {
+        returnData.mobile_number = data.mobileNumber;
+    }
+    if (data.specialization) {
+        returnData.specialization = data.specialization;
+    }
+    try {
+        const response = await doctor.docFindAndUpdate(id, returnData);
+        if (response.code !== 200) {
+            return res
+                .status(500)
+                .send({ message: 'Count Not update', response });
+        }
+        res.send(response.data);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: 'Count Not update', error });
+    }
+});
+
 router.get('/getDoc', handleJWT, async (req, res) => {
     const { user_id } = req;
     try {
         const response = await doctor.find_by_user(user_id);
-        console.log('Doctor', response);
         if (response.data) {
             return res.status(200).send(response);
         }
