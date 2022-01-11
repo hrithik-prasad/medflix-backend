@@ -88,6 +88,7 @@ router.get('/preview/:id', async (req, res) => {
             return;
         }
         const dateNow = new Date();
+
         const data = {
             doc: {
                 name: doc.data.name,
@@ -164,6 +165,7 @@ router.get('/:id', async (req, res) => {
             return;
         }
         const dateNow = new Date();
+
         const data = {
             doc: {
                 name: doc.data.name,
