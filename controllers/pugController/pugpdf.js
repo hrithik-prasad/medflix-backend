@@ -9,7 +9,9 @@ const { findReport } = require('../../databaseQueries/reportQueries');
 const { find_doc } = require('../../databaseQueries/doctorQueries');
 const { find_users } = require('../../databaseQueries/user');
 
+
 router.get('/preview/:id', async (req, res) => {
+
     try {
         // console.log('test called');
         // const testData = {
@@ -88,6 +90,7 @@ router.get('/preview/:id', async (req, res) => {
             return;
         }
         const dateNow = new Date();
+
         const data = {
             doc: {
                 name: doc.data.name,
@@ -164,6 +167,7 @@ router.get('/:id', async (req, res) => {
             return;
         }
         const dateNow = new Date();
+
         const data = {
             doc: {
                 name: doc.data.name,
