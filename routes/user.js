@@ -90,14 +90,13 @@ router.post('/login', async (req, res) => {
     if (email && password) {
         try {
             const { data: user } = await User.find_users({ email });
-            console.log(user, 'User');
+
             if (!user) {
                 return res.status(401).send({
                     message: "User Dosn't Exist",
                 });
             }
             const ver = await bcrypt.compare(password, user.password);
-            // console.log('ver', ver);
             if (!ver) {
                 return res.status(400).json({ message: 'PassWord is Wrong' });
             }
@@ -109,7 +108,6 @@ router.post('/login', async (req, res) => {
                     expiresIn: '5h',
                 }
             );
-
             const response_update = await User.find_user_update_token(
                 user.id,
                 token

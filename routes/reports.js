@@ -28,10 +28,9 @@ router.get('/getpdf/:id', async (req, res) => {
     console.log('Body', req.body);
     if (!id) return res.status(400).send({ message: 'query not complete' });
     try {
-        // const patient = await find_pt(id);
-        console.log('ID:', id);
+        // console.log('ID:', id);
         const report = await findReport({ _id: id });
-        console.log('Report', { report });
+        // console.log('Report', { report });
         if (report.code !== 200) {
             res.status(400).send(
                 report?.data || { message: 'Something went Wrong' }
@@ -108,7 +107,7 @@ router.get('/list', handleJWT, async (req, res) => {
             return res.status(400).send({ message: 'Something Went Wrong' });
         const reports = await findReport({ pt_at: user_id });
         const patient = await find_pt(reports.data[0].pt_id);
-        console.log('patient', patient);
+        // console.log('patient', patient);
         //TODO: change db model add name basic field in all model
         res.send(reports);
     } catch (err) {
@@ -119,24 +118,20 @@ router.get('/list', handleJWT, async (req, res) => {
 router.post('/save/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        console.log({ id });
-        console.log(req.body);
         const { profileData, medAdvice } = req.body;
-
         if (!(profileData && medAdvice))
             return res.status(400).send({ message: 'Bad Request' });
-
         const patient = await find_pt(id);
-        console.log('Patient', { patient });
+        // console.log('Patient', { patient });
         if (patient.code !== 200)
             return res.status(403).send({ message: 'patient id is invalid' });
         const org = await find_users({ _id: patient.data.pt_at.id });
-        console.log('ORG:', { org });
+        // console.log('ORG:', { org });
         if (org.code !== 200) {
             return res.status(401).send({ message: 'pt at id  is invalid' });
         }
         const doc = await find_doc(patient.data.doctor.id);
-        console.log('Doc', { doc });
+        // console.log('Doc', { doc });
         if (doc.code != 200)
             return res.status(401).send({ message: 'Docit is invalid' });
 
@@ -160,7 +155,7 @@ router.post('/save/:id', async (req, res) => {
         if (report.code !== 200) {
             return res.status(401).send({ message: 'Couldnt make report' });
         }
-        console.log('report', report);
+        // console.log('report', report);
         res.send(report);
     } catch (err) {
         console.log('Save Pt data for report errror', err);
