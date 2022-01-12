@@ -1,23 +1,62 @@
 {
-    "items": [
-        {
-            "name": "paste",
-            "cost": 40,
-            "quantity": 1,
-            "amount": 40
-        }
-    ],
-    "customerDetails": {
-        "name": "Muthu",
-        "area": "8/91, main street",
-        "city": "chennai",
-        "state": "Tamil nadu",
-        "country": "India"
+    "doc": {
+        "name": "Dr Archana Singh",
+        "degree": "MBBS (HONS), MS obs & gynae",
+        "specs": [
+            "Ex obs& gynae Registrar of vivekananad institure of medical sciecne(vims)",
+            "life member of ima & gdsi"
+        ],
+        "pos": "consultant gyaneocologiest, infertility speciality"
     },
-    "invoiceNumber": 12332523,
-    "dateofissue": "12/10/2020",
-    "invoiceTotal": 47.2,
-    "tax": 7.2,
-    "subtotal": 40,
-    "amountDue": 47.2
+    "org": {
+        "name": "Aakriti Hospital",
+        "logo": "https://aakritihospital.netlify.app/static/media/logo.e50a3e57.jpeg",
+        "subTitle": "ENT & Maternity Hospital",
+        "punchLine": "Reshape Your Health",
+        "website": "www.aakritihospital.com",
+        "address": "Near Sanichara Mandir, Sandalpur Road, Kumhrar, Patna -6",
+        "contact": "Mobile: 7070996106, 7070996105, 7070996104"
+    },
+    "ptData": {
+        "name": "SomeOne",
+        "phone": "7070996051",
+        "id": "120",
+        "address": "Patna",
+        "bp": "15",
+        "weight": "45",
+        "date": "2022/01/08"
+    },
+    "ptComplaints": {
+        "complaints": "Headache",
+        "oE": "Viral",
+        "testsPrescribed": "HOmo",
+        "OtherFindings": "asdasda"
+    },
+    "meds": [
+        {
+            "imp": "Normal tm",
+            "image": "http://localhost:5000/upload/getImage/file_1641999552980",
+            "for": "Eat"
+        },
+        {
+            "imp": "Normal tm",
+            "image": "http://localhost:5000/upload/getImage/file_1641999552980",
+            "for": "Eat"
+        },
+        {
+            "imp": "Normal tm",
+            "image": "http://localhost:5000/upload/getImage/file_1641999552980",
+            "for": "Eat"
+        },
+        {
+            "imp": "Normal tm",
+            "image": "http://localhost:5000/upload/getImage/file_1641999552980",
+            "for": "Eat"
+        },
+        {
+            "imp": "Normal tm",
+            "image": "http://localhost:5000/upload/getImage/file_1641999552980",
+            "for": "Eat"
+        }
+    ]
 }

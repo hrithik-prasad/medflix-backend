@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { BACKEND_URL } = require('../config');
 const { createReport } = require('../databaseQueries/reportQueries');
 const upload = require('../middleware/multerGrid');
 
@@ -74,35 +75,39 @@ router.post(
             reportType: 'ENDO',
             reportData: [],
         };
-
         if (lear) {
             reportDataToSave.reportData.push({
-                imp: learImp,
-                image: lear[0].filename,
+                imp: learImp.split(','),
+                for: 'Left Ear',
+                image: BACKEND_URL + '/upload/getImage/' + lear[0].filename,
             });
         }
         if (rear) {
             reportDataToSave.reportData.push({
-                imp: rearImp,
-                image: rear[0].filename,
+                imp: rearImp.split(','),
+                for: 'Right Ear',
+                image: BACKEND_URL + '/upload/getImage/' + rear[0].filename,
             });
         }
         if (lnose) {
             reportDataToSave.reportData.push({
-                imp: lnoseImp,
-                image: lnose[0].filename,
+                imp: lnoseImp.split(','),
+                for: 'Left Nose',
+                image: BACKEND_URL + '/upload/getImage/' + lnose[0].filename,
             });
         }
         if (rnose) {
             reportDataToSave.reportData.push({
-                imp: rnoseImp,
-                image: rnose[0].filename,
+                imp: rnoseImp.split(','),
+                for: 'Right Nose',
+                image: BACKEND_URL + '/upload/getImage/' + rnose[0].filename,
             });
         }
         if (tonsil) {
             reportDataToSave.reportData.push({
-                imp: tonsilImp,
-                image: tonsil[0].filename,
+                imp: tonsilImp.split(','),
+                for: 'Throat',
+                image: BACKEND_URL + '/upload/getImage/' + tonsil[0].filename,
             });
         }
         try {

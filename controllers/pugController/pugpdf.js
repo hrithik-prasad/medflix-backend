@@ -3,7 +3,7 @@ const pug = require('pug');
 const pdf = require('html-pdf');
 const path = require('path');
 const puppeteer = require('puppeteer');
-const { ROOT } = require('../../config');
+const { ROOT, BACKEND_URL } = require('../../config');
 const { find_pt } = require('../../databaseQueries/patient');
 const { findReport } = require('../../databaseQueries/reportQueries');
 const { find_doc } = require('../../databaseQueries/doctorQueries');
@@ -87,8 +87,40 @@ router.get('/preview/:id', async (req, res) => {
             );
             return;
         }
-        const dateNow = new Date();
 
+        if (report.data[0].reportType === 'PRESCRIPTION') {
+            console.log('Presctiption');
+        } else if (report.data[0].reportType === 'ENDO') {
+            console.log('ENDO');
+            const tempDate = new Date();
+            const endoData = {
+                doc: {
+                    name: doc.data.name,
+                    degree: doc.data.specialization,
+                    specs: doc.data.spec,
+                    pos: doc.data.position,
+                },
+                org: {
+                    name: org.data.name,
+                    logo: org.data.logo,
+                    subTitle: org.data.subTitle,
+                    punchLine: org.data.punchLine,
+                    website: org.data.website,
+                    address: org.data.address,
+                    contact: org.data.contact,
+                },
+                ptData: {
+                    name: patient.data.name,
+                    phone: patient.data.mobile_number,
+                    id: patient.data.pt_id ?? 1,
+                    address: patient.data.address,
+                    date: tempDate.toDateString(),
+                },
+                meds: report.data[0].reportData,
+            };
+            return res.render('indo', { ...endoData });
+        }
+        const dateNow = new Date();
         const data = {
             doc: {
                 name: doc.data.name,

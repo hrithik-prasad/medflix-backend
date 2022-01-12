@@ -1,0 +1,51 @@
+extends layout
+mixin reportDetails(data)
+    div.each__detail
+        div.wid
+            img(src= data.image, style="width:120px; height: 120px;")
+        div.detail
+                p.head #{data.for}
+                ul.list 
+                    each val in data.imp
+                        li.ent= val
+                
+        
+block content
+    div.container
+        header.container_header
+            div.title
+                h1 #{doc.name}
+                span.star #{doc.degree}
+                each spec in doc.specs
+                    span #{spec}
+                span.star #{doc.pos}
+            div
+                img(src= org.logo )
+            div.container_detail
+                p.hosname #{org.name}
+                span.star #{org.subTitle}
+                span.italic #{org.punchLine}
+                span #{org.website}
+                span #{org.address}
+                span #{org.contact}
+                    
+        div.container_body
+            div.details1
+                span.item Name: #{ptData.name}
+                span.item Phone: #{ptData.phone}
+                span.item ID: #{ptData.id}
+                span.item Address: #{ptData.address}
+            div.details2
+                span.item Date: #{ptData.date}
+
+                
+        div.container__description_indo
+                    each med in meds
+                        +reportDetails(med)
+
+        div.container_footer
+            div.details1
+                span.item #{doc.name}
+                span.item #{doc.degree}
+                
+
