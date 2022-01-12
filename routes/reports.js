@@ -123,7 +123,7 @@ router.get('/pt/:id', handleJWT, async (req, res) => {
             'patient.id': id,
             pt_at: req.user_id,
         });
-        if (reports.code !== 200) {
+        if (reports.code !== 200 && reports.code !== 206) {
             return res
                 .status(500)
                 .send({ message: 'Reports not Found', reports });
