@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const { TOKEN_KEY } = require('../config');
 const User = require('../databaseQueries/user');
 const { handleJWT } = require('../middleware/handleJWT');
-// const User = require("../models/user");
 
 router.get('/check', handleJWT, async (req, res) => {
     try {

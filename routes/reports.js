@@ -106,7 +106,7 @@ router.get('/list', handleJWT, async (req, res) => {
         if (!user_id)
             return res.status(400).send({ message: 'Something Went Wrong' });
         const reports = await findReport({ pt_at: user_id });
-        const patient = await find_pt(reports.data[0].pt_id);
+        // const patient = await find_pt(reports.data[0].pt_id);
         // console.log('patient', patient);
         //TODO: change db model add name basic field in all model
         res.send(reports);
@@ -115,6 +115,26 @@ router.get('/list', handleJWT, async (req, res) => {
         res.status(400).send({ message: 'Something Went Wrong' });
     }
 });
+
+router.get('/pt/:id', handleJWT, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const reports = await findReport({
+            'patient.id': id,
+            pt_at: req.user_id,
+        });
+        if (reports.code !== 200 && reports.code !== 206) {
+            return res
+                .status(500)
+                .send({ message: 'Reports not Found', reports });
+        }
+        res.send(reports.data);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({ message: 'Reports not Found', error });
+    }
+});
+
 router.post('/save/:id', async (req, res) => {
     try {
         const { id } = req.params;

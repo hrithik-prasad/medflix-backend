@@ -7,9 +7,10 @@ const storage = new GridFsStorage({
         console.log('Multer', file);
         return new Promise((resolve, reject) => {
             const fileInfo = {
-                filename: 'hello.pdf',
+                filename: 'file_' + Date.now(),
                 bucketName: 'uploads',
             };
+            req.file_name = fileInfo.filename;
             resolve(fileInfo);
         });
     },

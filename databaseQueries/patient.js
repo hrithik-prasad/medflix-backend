@@ -43,9 +43,9 @@ function findAndUpdate(id, update) {
     });
 }
 
-function find_all(filter) {
+function find_all(filter, option = { sort: { updatedAt: -1 } }) {
     return new Promise((resolve, reject) => {
-        patient.find(filter, (err, data) => {
+        patient.find(filter, {}, option, (err, data) => {
             if (err) {
                 reject({ code: 401, data: "Couldn't Find Data" });
                 return;

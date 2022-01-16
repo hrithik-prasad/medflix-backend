@@ -9,6 +9,7 @@ const User = require('./routes/user');
 const Patient = require('./routes/patient');
 const Reports = require('./routes/reports');
 const pugController = require('./controllers/pugController/pugpdf');
+const uploadController = require('./routes/uploadRoute');
 const DoctorRoute = require('./routes/doctor');
 const cookieParser = require('cookie-parser');
 const app = express();
@@ -19,7 +20,7 @@ const port = PORT || 5000;
 // const allowedOrigins = ['http://localhost:3000', 'https://techbgs.live'];
 
 (async () => {
-    mongoose
+    await mongoose
         .connect(MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -48,6 +49,7 @@ app.use('/patient', Patient);
 app.use('/doctor', DoctorRoute);
 app.use('/reports', Reports);
 app.use('/pug', pugController);
+app.use('/upload', uploadController);
 app.get('/', (req, res) => {
     res.status(200).send({ message: 'Server Up and Running' });
 });
