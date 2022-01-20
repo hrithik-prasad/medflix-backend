@@ -66,10 +66,26 @@ router.put('/at/:id', handleJWT, async (req, res) => {
     }
 });
 
+router.post('/docs', async (req, res) => {
+    try {
+        const { user_id } = req.body;
+        const response = await doctor.find_by_user(user_id);
+        if (response.code !== 200) {
+            return res.status(400).send(response.message);
+        }
+        return res.status(200).send(response);
+    } catch (err) {
+        console.log('Couldnot Find doc reg page', err);
+        res.status(500).send({ message: 'Something went wrong' });
+    }
+});
+
 router.get('/getDoc', handleJWT, async (req, res) => {
     const { user_id } = req;
     try {
+        console.log('user', user_id);
         const response = await doctor.find_by_user(user_id);
+        console.log('get doc', response);
         if (response.data) {
             return res.status(200).send(response);
         }

@@ -38,7 +38,10 @@ router.get('/all', handleJWT, async (req, res) => {
         const { user_id } = req;
         // console.log('User ID:', user_id);
         // console.log('Route Called!');
-        const response = await patient.find_all({ 'pt_at.id': user_id });
+        const response = await patient.find_all({
+            'pt_at.id': user_id,
+            isActive: true,
+        });
         res.status(200).send(response);
     } catch (error) {
         console.log('Error at get all', error);
@@ -62,6 +65,23 @@ router.post('/all', handleJWT, async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: 'something went wrong !' });
+    }
+});
+
+router.delete('/at/:id', handleJWT, async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).send({ message: 'Bad Request' });
+        }
+        const update = await patient.findAndUpdate(id, { isActive: false });
+        if (update.code !== 200) {
+            return res.status(500).send({ message: 'Something Went Wrong!' });
+        }
+        res.send({ message: 'Succesfully Deleted' });
+    } catch (error) {
+        console.log('error on pt delete', error);
+        return res.status(500).send({ message: 'Something Went Wrong!' });
     }
 });
 

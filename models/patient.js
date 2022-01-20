@@ -23,6 +23,10 @@ const patientSchema = new mongoose.Schema(
             },
             name: { type: String },
         },
+        isActive: {
+            type: mongoose.Schema.Types.Boolean,
+            default: true,
+        },
     },
     { timestamps: true }
 );

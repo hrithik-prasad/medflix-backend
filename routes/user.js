@@ -84,6 +84,26 @@ const checkTokenExp = (token) => {
     }
 };
 
+router.get('/detail', async (req, res) => {
+    try {
+        const { user_id } = req.query;
+        const response = await User.find_users({ _id: user_id });
+        if (response.code !== 200)
+            return res.status(401).send({ message: 'No user Found' });
+
+        const responseData = {
+            name: response.data.name,
+            email: response.data.email,
+            logo: response.data.logo,
+            subTitle: response.data.subTitle,
+            punchLine: response.data.punchLine,
+            address: response.data.address,
+            contact: response.data.contact,
+        };
+        res.send(responseData);
+    } catch (err) {}
+});
+
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     if (email && password) {
