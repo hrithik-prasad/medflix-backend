@@ -13,6 +13,7 @@ router.get('/check', handleJWT, async (req, res) => {
             return res.status(400).redirect('/login');
         }
         res.status(200).send({
+            id: response.data._id,
             name: response.data.name,
             email: response.data.email,
             token: response.data.token,
@@ -134,6 +135,7 @@ router.post('/login', async (req, res) => {
             console.log('Response token', response_update);
 
             return res.send({
+                id: user._id,
                 name: user.name,
                 email: user.email,
                 token: token,

@@ -1,18 +1,33 @@
 const { handleJWT } = require('../middleware/handleJWT');
 const patient = require('../databaseQueries/patient');
 const { find_doc } = require('../databaseQueries/doctorQueries');
+const { find_users } = require('../databaseQueries/user');
 const router = require('express').Router();
 
-router.post('/create', handleJWT, async (req, res) => {
-    const { name, email, age, address, mobileNumber, gender, docId, docName } =
-        req.body;
-    const { user_id, user_name } = req;
-
+router.post('/create', async (req, res) => {
+    const {
+        name,
+        email,
+        age,
+        address,
+        mobileNumber,
+        gender,
+        docId,
+        docName,
+        user_id,
+        user_name,
+    } = req.body;
+    if (!user_id)
+        return res.status(400).send({ message: 'Send All Data user' });
     if (!(name && email && age && address && mobileNumber && gender && docId)) {
         return res.status(400).send({ message: 'Send All Data' });
     }
 
     try {
+        const user = await find_users({ _id: user_id });
+        console.log(user);
+        if (user.code !== 200)
+            return res.status(401).send({ message: 'User Not Found' });
         const { data: response } = await patient.create_pt({
             name,
             email,
@@ -20,7 +35,7 @@ router.post('/create', handleJWT, async (req, res) => {
             address,
             gender,
             mobile_number: mobileNumber,
-            pt_at: { id: user_id, name: user_name },
+            pt_at: { id: user_id, name: user_name ?? user.data.name },
             doctor: {
                 id: docId,
                 name: docName,
@@ -36,8 +51,6 @@ router.post('/create', handleJWT, async (req, res) => {
 router.get('/all', handleJWT, async (req, res) => {
     try {
         const { user_id } = req;
-        // console.log('User ID:', user_id);
-        // console.log('Route Called!');
         const response = await patient.find_all({
             'pt_at.id': user_id,
             isActive: true,
@@ -147,7 +160,6 @@ router.get('/at/:id', async (req, res) => {
             res.status(400).send({ message: 'Something Went Wrong!' });
             return;
         }
-        // console.log(response.data);
         res.status(200).send(response.data);
     } catch (err) {
         console.log('Error on id', err);
