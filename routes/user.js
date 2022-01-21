@@ -17,6 +17,7 @@ router.get('/check', handleJWT, async (req, res) => {
             name: response.data.name,
             email: response.data.email,
             token: response.data.token,
+            logo: response.data.logo,
         });
     } catch (err) {
         console.log(err);
@@ -25,7 +26,7 @@ router.get('/check', handleJWT, async (req, res) => {
 });
 
 router.get('/logout', handleJWT, (req, res) => {
-    res.clearCookie('token')
+    res.clearCookie('session')
         .status(200)
         .send({ status: 200, message: 'Logged Out' });
 });
@@ -139,6 +140,7 @@ router.post('/login', async (req, res) => {
                 name: user.name,
                 email: user.email,
                 token: token,
+                logo: user.logo,
             });
         } catch (err) {
             console.log(err);
