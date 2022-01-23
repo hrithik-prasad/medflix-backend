@@ -13,9 +13,11 @@ router.get('/check', handleJWT, async (req, res) => {
             return res.status(400).redirect('/login');
         }
         res.status(200).send({
+            id: response.data._id,
             name: response.data.name,
             email: response.data.email,
             token: response.data.token,
+            logo: response.data.logo,
         });
     } catch (err) {
         console.log(err);
@@ -24,7 +26,7 @@ router.get('/check', handleJWT, async (req, res) => {
 });
 
 router.get('/logout', handleJWT, (req, res) => {
-    res.clearCookie('token')
+    res.clearCookie('session')
         .status(200)
         .send({ status: 200, message: 'Logged Out' });
 });
@@ -84,6 +86,26 @@ const checkTokenExp = (token) => {
     }
 };
 
+router.get('/detail', async (req, res) => {
+    try {
+        const { user_id } = req.query;
+        const response = await User.find_users({ _id: user_id });
+        if (response.code !== 200)
+            return res.status(401).send({ message: 'No user Found' });
+
+        const responseData = {
+            name: response.data.name,
+            email: response.data.email,
+            logo: response.data.logo,
+            subTitle: response.data.subTitle,
+            punchLine: response.data.punchLine,
+            address: response.data.address,
+            contact: response.data.contact,
+        };
+        res.send(responseData);
+    } catch (err) {}
+});
+
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     if (email && password) {
@@ -114,9 +136,11 @@ router.post('/login', async (req, res) => {
             console.log('Response token', response_update);
 
             return res.send({
+                id: user._id,
                 name: user.name,
                 email: user.email,
                 token: token,
+                logo: user.logo,
             });
         } catch (err) {
             console.log(err);

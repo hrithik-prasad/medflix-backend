@@ -1,7 +1,6 @@
 const User = require('../models/user');
 
 function find_users(filter, projection = '', options = {}) {
-    // console.log('Filters', { filter });
     return new Promise((resolve, reject) => {
         if (!filter) {
             reject({ code: 401, data: 'Improper find query' });

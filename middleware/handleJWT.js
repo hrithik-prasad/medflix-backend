@@ -16,7 +16,9 @@ const handleJWT = async (req, res, next) => {
         return next();
     } catch (error) {
         console.log('Err Token Expired', error);
-        res.clearCookie('session').redirect('/login');
+        res.clearCookie('session')
+            .status(400)
+            .send({ message: 'Not Authenticated' });
     }
 };
 
