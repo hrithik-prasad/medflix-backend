@@ -83,9 +83,9 @@ router.post('/docs', async (req, res) => {
 router.get('/getDoc', handleJWT, async (req, res) => {
     const { user_id } = req;
     try {
-        console.log('user', user_id);
+        // console.log('user', user_id);
         const response = await doctor.find_by_user(user_id);
-        console.log('get doc', response);
+        // console.log('get doc', response);
         if (response.data) {
             return res.status(200).send(response);
         }
