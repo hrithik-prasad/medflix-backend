@@ -105,7 +105,7 @@ router.get('/list', handleJWT, async (req, res) => {
         const { user_id } = req;
         if (!user_id)
             return res.status(400).send({ message: 'Something Went Wrong' });
-        const reports = await findReport({ pt_at: user_id });
+        const reports = await findReport({ 'org.id': user_id });
         // const patient = await find_pt(reports.data[0].pt_id);
         // console.log('patient', patient);
         //TODO: change db model add name basic field in all model
