@@ -46,7 +46,7 @@ jobs:
       - name: Installing packages
         run: npm i
       - name: run who a i
-        run: whoami
+        run: whoami > /home/ubuntu/user.txt
       - name: Get current date # get the date of the build
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
