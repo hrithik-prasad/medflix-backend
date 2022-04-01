@@ -45,21 +45,20 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Installing packages
         run: npm i
-      - name: run who a i
-        run: whoami > /home/ubuntu/user.txt
       - name: Get current date # get the date of the build
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
       - name: Build the Docker image # push The image to the docker hub
-        run: sudo docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
+        run: docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
+      - name: docker login
+        run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: Docker Push
-        run: sudo docker push $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
-     
-#       - name: executing remote ssh commands using password
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: ${{ secrets.HOST }}
-#           username: ${{ secrets.USERNAME }}
-#           key: ${{ secrets.KEY }}
-#           port: 22
-#           script: sudo docker run -d --name backend -p 5000:5000 $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
+        run: docker push $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: 22
+          script: sudo docker run -d --name backend -p 5000:5000 $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
