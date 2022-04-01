@@ -19,6 +19,9 @@ env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
   DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
   REPO_NAME: ${{secrets.REPO_NAME}}
+  USERNAME: ${{secrets.USERNAME}}
+  KEY: ${{secrets.KEY}}
+  HOST: ${{secrets.HOST}}
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -49,3 +52,11 @@ jobs:
         run: sudo docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
       - name: Docker Push
         run: sudo docker push $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: 22
+          script: sudo docker run -d --name backend -p 5000:5000 $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
