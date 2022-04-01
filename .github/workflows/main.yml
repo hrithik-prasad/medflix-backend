@@ -45,6 +45,8 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Installing packages
         run: npm i
+      - name: run who a i
+        run: whoami
       - name: Get current date # get the date of the build
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
@@ -52,8 +54,7 @@ jobs:
         run: sudo docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
       - name: Docker Push
         run: sudo docker push $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
-      - name: run who a i
-        run: whoami
+     
 #       - name: executing remote ssh commands using password
 #         uses: appleboy/ssh-action@master
 #         with:
