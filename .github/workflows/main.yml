@@ -45,20 +45,26 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Installing packages
         run: npm i
-      - name: Get current date # get the date of the build
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
-      - name: Build the Docker image # push The image to the docker hub
-        run: docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
-      - name: docker login
-        run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-      - name: Docker Push
-        run: docker push $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
-      - name: executing remote ssh commands using password
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: 22
-          script: sudo docker run -d --name backend -p 5000:5000 ${{ secrets.DOCKER_USER }}/${{ secrets.REPO_NAME }}:${{ steps.date.outputs.date }}
+      - name: show files
+        run : ls -la > /home/ubuntu/files.txt
+      - name: copy files to remote server
+        run: rsync --omit-dir-times -av -e 'ssh -i $KEY' . $USERNAME@$HOST:/home/ubuntu/medflixBackend/
+#       - name: Deploy
+#         run: ssh -i $KEY $USERNAME@$HOST pm2 restart all
+#       - name: Get current date # get the date of the build
+#         id: date
+#         run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
+#       - name: Build the Docker image # push The image to the docker hub
+#         run: docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
+#       - name: docker login
+#         run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+#       - name: Docker Push
+#         run: docker push $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
+#       - name: executing remote ssh commands using password
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.HOST }}
+#           username: ${{ secrets.USERNAME }}
+#           key: ${{ secrets.KEY }}
+#           port: 22
+#           script: sudo docker run -d --name backend -p 5000:5000 ${{ secrets.DOCKER_USER }}/${{ secrets.REPO_NAME }}:${{ steps.date.outputs.date }}
