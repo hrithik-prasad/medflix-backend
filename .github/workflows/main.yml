@@ -47,15 +47,15 @@ jobs:
         run: npm i
       - name: show files
         run : ls -la > /home/ubuntu/files.txt
-      - name: configure ssh
-        run : |
-          sudo mkdir -p /builds/ssh
-          sudo chmod 700 /builds/ssh
-          sudo touch /builds/ssh/ssh_key
-          echo "$KEY" > /builds/ssh/ssh_key
-          sudo chmod 400 /builds/ssh/ssh_key
+#       - name: configure ssh
+#         run : |
+#           sudo mkdir -p /builds/ssh
+#           sudo chmod 700 /builds/ssh
+#           sudo touch /builds/ssh/ssh_key
+#           echo "$KEY" > /builds/ssh/ssh_key
+#           sudo chmod 400 /builds/ssh/ssh_key
       - name: copy files to remote server
-        run: rsync --omit-dir-times -av -e 'ssh -i /builds/ssh/ssh_key -o StrictHostKeyChecking=no' . $USERNAME@$HOST:/home/ubuntu/medflixBackend/
+        run: rsync --omit-dir-times -av -e 'ssh -i ${{ secrects.KEY }} -o StrictHostKeyChecking=no' . $USERNAME@$HOST:/home/ubuntu/medflixBackend/
 #       - name: Deploy
 #         run: ssh -i /builds/ssh/ssh_key $USERNAME@$HOST -o StrictHostKeyChecking=no pm2 restart all
 #       - name: Get current date # get the date of the build
