@@ -48,9 +48,9 @@ jobs:
       - name: show files
         run : ls -la > /home/ubuntu/files.txt
       - name: copy files to remote server
-        run: rsync --omit-dir-times -av -e 'ssh -i ${{ secrets.KEY }}' . $USERNAME@$HOST:/home/ubuntu/medflixBackend/
+        run: rsync --omit-dir-times -av -e 'ssh -i ${{ secrets.KEY }} -o StrictHostKeyChecking=no' . $USERNAME@$HOST:/home/ubuntu/medflixBackend/
 #       - name: Deploy
-#         run: ssh -i $KEY $USERNAME@$HOST pm2 restart all
+#         run: ssh -i $KEY $USERNAME@$HOST -o StrictHostKeyChecking=no pm2 restart all
 #       - name: Get current date # get the date of the build
 #         id: date
 #         run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
