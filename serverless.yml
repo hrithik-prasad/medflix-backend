@@ -1,0 +1,23 @@
+org: hrithikprasad
+app: aws-node-express-api-project
+service: aws-node-express-api-project
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stackTags:
+    app: medflix-backend
+  tags:
+    app: medflix-backend
+
+functions:
+  api:
+    handler: index.handler
+    url: true
+    events:
+      - httpApi: '*'
+
+
+plugins:
+  - serverless-offline

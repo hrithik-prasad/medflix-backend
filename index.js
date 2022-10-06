@@ -12,6 +12,7 @@ const pugController = require('./controllers/pugController/pugpdf');
 const uploadController = require('./routes/uploadRoute');
 const DoctorRoute = require('./routes/doctor');
 const cookieParser = require('cookie-parser');
+const ServerlessHttp = require('serverless-http');
 const app = express();
 app.set('view engine', 'pug');
 
@@ -57,3 +58,6 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Server Up & Running on ${port}`);
 });
+
+module.exports.handler = ServerlessHttp(app);
+
