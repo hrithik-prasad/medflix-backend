@@ -6,13 +6,13 @@ router.post('/create', handleJWT, async (req, res) => {
     const { name, specialization, mobileNumber, gender, spec, position } =
         req.body;
     const { user_id, user_name } = req;
-    if (!(name && mobileNumber && gender && spec, position)) {
+    if (!(name && mobileNumber && gender && spec && position)) {
         return res.status(400).send({ message: 'Send Complete Data' });
     }
-    let specArray = spec.split(',');
+    const specArray = spec.split(',');
     try {
         const { data: response } = await doctor.create_doc({
-            name: 'Dr. ' + name,
+            name: `Dr. ${name}`,
             gender,
             mobile_number: mobileNumber,
             specialization,
@@ -35,7 +35,7 @@ router.put('/at/:id', handleJWT, async (req, res) => {
     const data = req.body;
     const returnData = {};
     if (data.name) {
-        returnData.name = 'Dr. ' + data.name;
+        returnData.name = `Dr. ${data.name}`;
     }
     if (data.gender) {
         returnData.gender = data.gender;

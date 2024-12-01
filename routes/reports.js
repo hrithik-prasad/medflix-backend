@@ -152,7 +152,7 @@ router.post('/save/:id', async (req, res) => {
         }
         const doc = await find_doc(patient.data.doctor.id);
         // console.log('Doc', { doc });
-        if (doc.code != 200)
+        if (doc.code !== 200)
             return res.status(401).send({ message: 'Docit is invalid' });
 
         const report = await createReport({
